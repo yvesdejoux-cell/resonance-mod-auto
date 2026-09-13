@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.resonance.music.data.api.models.AlbumItem
 import com.resonance.music.data.repository.MusicRepository
+import com.resonance.music.playback.PlaybackManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +20,8 @@ data class GenreUiState(
 
 @HiltViewModel
 class GenreViewModel @Inject constructor(
-    private val musicRepository: MusicRepository
+    private val musicRepository: MusicRepository,
+    private val playbackManager: PlaybackManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GenreUiState())
@@ -38,4 +40,12 @@ class GenreViewModel @Inject constructor(
     }
 
     fun coverArtUrl(coverArtId: String): String? = musicRepository.getCoverArtUrl(coverArtId, 256)
+
+    /** Fetch an album's tracks and start playing it. */
+    fun playAlbum(albumId: String) {
+        viewModelScope.launch {
+            val songs = runCatching { musicRepository.getAlbumDetail(albumId)?.song }.getOrNull().orEmpty()
+            if (songs.isNotEmpty()) playbackManager.playSongs(songs)
+        }
+    }
 }

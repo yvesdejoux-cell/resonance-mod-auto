@@ -3,6 +3,9 @@ package com.resonance.music.data.repository
 import com.resonance.music.data.api.SubsonicApi
 import com.resonance.music.data.api.SubsonicApiHelper
 import com.resonance.music.data.api.models.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,6 +28,17 @@ class MusicRepository @Inject constructor(
         val env = root.response
         if (!env.isOk) throw SubsonicException(env.error)
         return env.artist
+    }
+
+    /** Subsonic has no "all songs by artist" endpoint: gather each album's songs
+     *  in parallel and flatten in album order. Used to shuffle-play an artist. */
+    suspend fun getArtistSongs(artistId: String): List<SongItem> {
+        val albums = getArtistDetail(artistId)?.album ?: return emptyList()
+        return coroutineScope {
+            albums.map { album -> async { getAlbumDetail(album.id)?.song ?: emptyList() } }
+                .awaitAll()
+                .flatten()
+        }
     }
 
     /** Artist biography + similar artists. Best-effort: older servers lack getArtistInfo2. */
@@ -66,6 +80,15 @@ class MusicRepository @Inject constructor(
         val env = root.response
         if (!env.isOk) throw SubsonicException(env.error)
         return env.album
+    }
+
+    /** Resolves a bare song id to its full metadata — needed when a client (e.g. Android
+     *  Auto's legacy playFromMediaId) hands us only an id with no cached [SongItem]. */
+    suspend fun getSong(id: String): SongItem? {
+        val root = api.getSong(id)
+        val env = root.response
+        if (!env.isOk) return null
+        return env.song
     }
 
     // --- Search ---

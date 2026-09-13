@@ -15,10 +15,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.resonance.music.R
 import com.resonance.music.ui.components.SongActions
 import com.resonance.music.ui.components.SongListItem
 
@@ -43,30 +45,30 @@ fun AlbumScreen(
                 title = { Text(uiState.albumName) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.content_desc_back))
                     }
                 },
                 actions = {
                     IconButton(onClick = viewModel::toggleFavorite) {
                         Icon(
                             imageVector = if (uiState.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = if (uiState.isFavorite) "Remove from favorites" else "Add to favorites",
+                            contentDescription = if (uiState.isFavorite) stringResource(R.string.artist_remove_from_favorites) else stringResource(R.string.artist_add_to_favorites),
                             tint = if (uiState.isFavorite) MaterialTheme.colorScheme.primary else LocalContentColor.current
                         )
                     }
                     var showAlbumMenu by remember { mutableStateOf(false) }
                     Box {
                         IconButton(onClick = { showAlbumMenu = true }) {
-                            Icon(Icons.Default.MoreVert, contentDescription = "Album options")
+                            Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.album_options))
                         }
                         DropdownMenu(expanded = showAlbumMenu, onDismissRequest = { showAlbumMenu = false }) {
                             DropdownMenuItem(
-                                text = { Text("Play next") },
+                                text = { Text(stringResource(R.string.action_play_next)) },
                                 onClick = { showAlbumMenu = false; viewModel.playAllNext() },
                                 leadingIcon = { Icon(Icons.Default.QueuePlayNext, contentDescription = null) }
                             )
                             DropdownMenuItem(
-                                text = { Text("Add to queue") },
+                                text = { Text(stringResource(R.string.action_add_to_queue)) },
                                 onClick = { showAlbumMenu = false; viewModel.addAllToQueue() },
                                 leadingIcon = { Icon(Icons.Default.PlaylistAdd, contentDescription = null) }
                             )
@@ -109,7 +111,7 @@ fun AlbumScreen(
                             if (uiState.coverArtUrl != null) {
                                 AsyncImage(
                                     model = uiState.coverArtUrl,
-                                    contentDescription = "Album art",
+                                    contentDescription = stringResource(R.string.content_desc_album_art),
                                     modifier = Modifier.fillMaxSize(),
                                     contentScale = ContentScale.Crop
                                 )
@@ -158,12 +160,12 @@ fun AlbumScreen(
                             Button(onClick = { viewModel.playAll(shuffle = false) }) {
                                 Icon(Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(18.dp))
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text("Play")
+                                Text(stringResource(R.string.action_play))
                             }
                             OutlinedButton(onClick = { viewModel.playAll(shuffle = true) }) {
                                 Icon(Icons.Default.Shuffle, contentDescription = null, modifier = Modifier.size(18.dp))
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text("Shuffle")
+                                Text(stringResource(R.string.action_shuffle))
                             }
                         }
                     }
@@ -174,7 +176,7 @@ fun AlbumScreen(
                     Column {
                         if (multiDisc && (index == 0 || uiState.songs[index - 1].discNumber != song.discNumber)) {
                             Text(
-                                text = "Disc ${song.discNumber ?: 1}",
+                                text = stringResource(R.string.album_disc_number, song.discNumber ?: 1),
                                 style = MaterialTheme.typography.titleSmall,
                                 color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)

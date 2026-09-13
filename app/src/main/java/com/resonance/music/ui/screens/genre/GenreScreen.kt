@@ -10,8 +10,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.resonance.music.R
 import com.resonance.music.ui.components.AlbumCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,7 +34,7 @@ fun GenreScreen(
                 title = { Text(genre) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.content_desc_back))
                     }
                 }
             )
@@ -49,7 +51,7 @@ fun GenreScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    "No albums in this genre",
+                    stringResource(R.string.genre_no_albums),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -67,6 +69,7 @@ fun GenreScreen(
                         album = album,
                         coverArtUrl = album.coverArt?.let { viewModel.coverArtUrl(it) },
                         modifier = Modifier.fillMaxWidth(),
+                        onPlayClick = { viewModel.playAlbum(album.id) },
                         onClick = { onAlbumClick(album.id) }
                     )
                 }

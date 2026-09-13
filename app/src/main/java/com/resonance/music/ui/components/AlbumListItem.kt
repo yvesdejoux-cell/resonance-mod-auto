@@ -6,22 +6,26 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Album
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.resonance.music.R
 import com.resonance.music.data.api.models.AlbumItem
 
 @Composable
 fun AlbumListItem(
     album: AlbumItem,
     coverArtUrl: String?,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onPlayClick: (() -> Unit)? = null
 ) {
     ListItem(
         headlineContent = {
@@ -31,6 +35,13 @@ fun AlbumListItem(
             val details = listOfNotNull(album.artist, album.year?.toString()).joinToString(" \u2022 ")
             if (details.isNotEmpty()) {
                 Text(details, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            }
+        },
+        trailingContent = onPlayClick?.let {
+            {
+                IconButton(onClick = it) {
+                    Icon(Icons.Default.PlayArrow, contentDescription = stringResource(R.string.action_play))
+                }
             }
         },
         leadingContent = {

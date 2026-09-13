@@ -24,11 +24,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.resonance.music.R
 import com.resonance.music.data.api.models.ArtistItem
 import com.resonance.music.playback.RepeatMode
 import com.resonance.music.ui.components.AlbumListItem
@@ -58,14 +61,14 @@ fun ArtistScreen(
                 title = { Text(uiState.artistName) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.content_desc_back))
                     }
                 },
                 actions = {
                     IconButton(onClick = viewModel::toggleFavorite) {
                         Icon(
                             imageVector = if (uiState.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = if (uiState.isFavorite) "Remove from favorites" else "Add to favorites",
+                            contentDescription = if (uiState.isFavorite) stringResource(R.string.artist_remove_from_favorites) else stringResource(R.string.artist_add_to_favorites),
                             tint = if (uiState.isFavorite) MaterialTheme.colorScheme.primary else LocalContentColor.current
                         )
                     }
@@ -101,7 +104,7 @@ fun ArtistScreen(
                             if (uiState.imageUrl != null) {
                                 AsyncImage(
                                     model = uiState.imageUrl,
-                                    contentDescription = "Artist image",
+                                    contentDescription = stringResource(R.string.content_desc_artist_image),
                                     modifier = Modifier.fillMaxSize(),
                                     contentScale = ContentScale.Crop
                                 )
@@ -123,7 +126,7 @@ fun ArtistScreen(
                         )
 
                         Text(
-                            text = "${uiState.albumCount} ${if (uiState.albumCount == 1) "album" else "albums"}",
+                            text = pluralStringResource(R.plurals.album_count, uiState.albumCount, uiState.albumCount),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -138,14 +141,14 @@ fun ArtistScreen(
                                 enabled = uiState.tracks.isNotEmpty()
                             ) {
                                 Icon(Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(18.dp))
-                                Spacer(Modifier.width(4.dp)); Text("Play")
+                                Spacer(Modifier.width(4.dp)); Text(stringResource(R.string.action_play))
                             }
                             OutlinedButton(
                                 onClick = { viewModel.playAll(shuffle = true) },
                                 enabled = uiState.tracks.isNotEmpty()
                             ) {
                                 Icon(Icons.Default.Shuffle, contentDescription = null, modifier = Modifier.size(18.dp))
-                                Spacer(Modifier.width(4.dp)); Text("Shuffle")
+                                Spacer(Modifier.width(4.dp)); Text(stringResource(R.string.action_shuffle))
                             }
                             // Loop toggle reflects + drives the global repeat mode.
                             FilledIconToggleButton(
@@ -154,7 +157,7 @@ fun ArtistScreen(
                             ) {
                                 Icon(
                                     if (repeatMode == RepeatMode.ONE) Icons.Default.RepeatOne else Icons.Default.Repeat,
-                                    contentDescription = "Loop"
+                                    contentDescription = stringResource(R.string.action_loop)
                                 )
                             }
                         }
@@ -181,12 +184,12 @@ fun ArtistScreen(
                         Tab(
                             selected = selectedTab == 0,
                             onClick = { selectedTab = 0 },
-                            text = { Text("Albums") }
+                            text = { Text(stringResource(R.string.label_albums)) }
                         )
                         Tab(
                             selected = selectedTab == 1,
                             onClick = { selectedTab = 1 },
-                            text = { Text("Tracks") }
+                            text = { Text(stringResource(R.string.label_tracks)) }
                         )
                     }
                 }
@@ -196,6 +199,7 @@ fun ArtistScreen(
                         AlbumListItem(
                             album = album,
                             coverArtUrl = album.coverArt?.let { uiState.coverArtUrlBuilder?.invoke(it) },
+                            onPlayClick = { viewModel.playAlbum(album.id) },
                             onClick = { onAlbumClick(album.id) }
                         )
                     }
@@ -251,7 +255,7 @@ private fun SimilarArtists(
 ) {
     Column {
         Text(
-            text = "Similar artists",
+            text = stringResource(R.string.artist_similar_artists),
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         )

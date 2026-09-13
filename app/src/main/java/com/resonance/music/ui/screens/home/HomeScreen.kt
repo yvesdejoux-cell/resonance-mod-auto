@@ -23,11 +23,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.resonance.music.R
 import com.resonance.music.data.api.models.AlbumItem
 import com.resonance.music.ui.components.AlbumCard
 import com.resonance.music.ui.components.SlimTopBar
@@ -43,6 +45,13 @@ fun HomeScreen(
     // Stable reference — avoids new lambda allocation on every recomposition
     val coverArtUrlBuilder = remember<(String) -> String?> { { viewModel.getCoverArtUrl(it) } }
 
+    // Shelf titles are plain Strings resolved here (Composable context) since the
+    // LazyListScope builder block below isn't itself a Composable scope.
+    val recentTitle = stringResource(R.string.home_shelf_recent)
+    val newestTitle = stringResource(R.string.home_shelf_newest)
+    val frequentTitle = stringResource(R.string.home_shelf_frequent)
+    val randomTitle = stringResource(R.string.home_shelf_random)
+
     LaunchedEffect(Unit) {
         viewModel.loadHome()
     }
@@ -57,7 +66,7 @@ fun HomeScreen(
 
     Scaffold(
         topBar = {
-            SlimTopBar("Resonance")
+            SlimTopBar(stringResource(R.string.app_name))
         }
     ) { padding ->
         when {
@@ -108,14 +117,14 @@ fun HomeScreen(
                     ) {
                         Icon(Icons.Default.Shuffle, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(8.dp))
-                        Text("Shuffle all")
+                        Text(stringResource(R.string.home_shuffle_all))
                     }
                 }
 
-                albumShelf("recent", "Recently played", uiState.recentAlbums, onAlbumClick, onSeeAllClick, coverArtUrlBuilder)
-                albumShelf("newest", "Newest additions", uiState.newestAlbums, onAlbumClick, onSeeAllClick, coverArtUrlBuilder)
-                albumShelf("frequent", "Most played", uiState.frequentAlbums, onAlbumClick, onSeeAllClick, coverArtUrlBuilder)
-                albumShelf("random", "Random picks", uiState.randomAlbums, onAlbumClick, onSeeAllClick, coverArtUrlBuilder)
+                albumShelf("recent", recentTitle, uiState.recentAlbums, onAlbumClick, onSeeAllClick, coverArtUrlBuilder, viewModel::playAlbum)
+                albumShelf("newest", newestTitle, uiState.newestAlbums, onAlbumClick, onSeeAllClick, coverArtUrlBuilder, viewModel::playAlbum)
+                albumShelf("frequent", frequentTitle, uiState.frequentAlbums, onAlbumClick, onSeeAllClick, coverArtUrlBuilder, viewModel::playAlbum)
+                albumShelf("random", randomTitle, uiState.randomAlbums, onAlbumClick, onSeeAllClick, coverArtUrlBuilder, viewModel::playAlbum)
               }
               PullToRefreshContainer(
                   state = pullState,
@@ -139,7 +148,8 @@ private fun LazyListScope.albumShelf(
     albums: List<AlbumItem>,
     onAlbumClick: (String) -> Unit,
     onSeeAll: () -> Unit,
-    coverArtUrlBuilder: (String) -> String?
+    coverArtUrlBuilder: (String) -> String?,
+    onPlayClick: (String) -> Unit
 ) {
     if (albums.isEmpty()) return
     item(key = key) {
@@ -150,7 +160,7 @@ private fun LazyListScope.albumShelf(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(title, style = MaterialTheme.typography.titleLarge)
-                TextButton(onClick = onSeeAll) { Text("See all") }
+                TextButton(onClick = onSeeAll) { Text(stringResource(R.string.action_see_all)) }
             }
             LazyRow(
                 contentPadding = PaddingValues(horizontal = 16.dp),
@@ -161,6 +171,7 @@ private fun LazyListScope.albumShelf(
                         album = album,
                         coverArtUrl = album.coverArt?.let { coverArtUrlBuilder(it) },
                         modifier = Modifier.width(160.dp),
+                        onPlayClick = { onPlayClick(album.id) },
                         onClick = { onAlbumClick(album.id) }
                     )
                 }
@@ -210,7 +221,7 @@ private fun HeroCard(
                 .fillMaxWidth(0.78f)
         ) {
             Text(
-                text = "JUMP BACK IN",
+                text = stringResource(R.string.home_jump_back_in),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.primary,
                 letterSpacing = 1.5.sp
@@ -242,7 +253,7 @@ private fun HeroCard(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary
         ) {
-            Icon(Icons.Default.PlayArrow, contentDescription = "Play", modifier = Modifier.size(28.dp))
+            Icon(Icons.Default.PlayArrow, contentDescription = stringResource(R.string.action_play), modifier = Modifier.size(28.dp))
         }
     }
 }
@@ -251,21 +262,24 @@ private fun HeroCard(
 private fun ErrorState(error: String?, onRetry: () -> Unit, modifier: Modifier) {
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("Failed to load", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.home_load_failed), style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                error ?: "Unknown error",
+                error ?: stringResource(R.string.error_unknown),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.height(16.dp))
-            FilledTonalButton(onClick = onRetry) { Text("Retry") }
+            FilledTonalButton(onClick = onRetry) { Text(stringResource(R.string.action_retry)) }
         }
     }
 }
 
-private fun greeting(): String = when (java.time.LocalTime.now().hour) {
-    in 5..11 -> "Good morning"
-    in 12..17 -> "Good afternoon"
-    else -> "Good evening"
-}
+@Composable
+private fun greeting(): String = stringResource(
+    when (java.time.LocalTime.now().hour) {
+        in 5..11 -> R.string.home_greeting_morning
+        in 12..17 -> R.string.home_greeting_afternoon
+        else -> R.string.home_greeting_evening
+    }
+)

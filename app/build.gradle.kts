@@ -13,7 +13,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.resonance.music"
+        applicationId = "fr.ydjixi.resonancemodauto"
         minSdk = 31
         targetSdk = 34
         versionCode = 10
@@ -116,6 +116,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.splashscreen)
+    implementation(libs.androidx.appcompat)
 
     // Hilt
     implementation(libs.hilt.android)
@@ -138,6 +139,7 @@ dependencies {
 
     // Coroutines
     implementation(libs.kotlinx.coroutines)
+    implementation(libs.kotlinx.coroutines.guava)
 
     // Reorderable queue (Compose 1.6-compatible line)
     implementation(libs.reorderable)

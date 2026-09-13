@@ -18,9 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.resonance.music.R
 import com.resonance.music.ui.components.AlbumCard
 import com.resonance.music.ui.components.AlbumListItem
 import com.resonance.music.ui.components.SlimTopBar
@@ -28,6 +31,22 @@ import com.resonance.music.ui.components.SongActions
 import com.resonance.music.ui.components.SongListItem
 
 enum class LibraryTab { Artists, Albums, Genres, Playlists, Favorites }
+
+private fun LibraryTab.labelRes(): Int = when (this) {
+    LibraryTab.Artists -> R.string.label_artists
+    LibraryTab.Albums -> R.string.label_albums
+    LibraryTab.Genres -> R.string.label_genres
+    LibraryTab.Playlists -> R.string.label_playlists
+    LibraryTab.Favorites -> R.string.label_favorites
+}
+
+private fun AlbumSort.labelRes(): Int = when (this) {
+    AlbumSort.AZ -> R.string.sort_az
+    AlbumSort.NEWEST -> R.string.sort_newest
+    AlbumSort.RECENT -> R.string.sort_recent
+    AlbumSort.FREQUENT -> R.string.sort_frequent
+    AlbumSort.RANDOM -> R.string.sort_random
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,7 +81,7 @@ fun LibraryScreen(
 
     Scaffold(
         topBar = {
-            SlimTopBar("Library")
+            SlimTopBar(stringResource(R.string.library_title))
         }
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding)) {
@@ -71,7 +90,7 @@ fun LibraryScreen(
                     Tab(
                         selected = selectedTab == tab,
                         onClick = { selectedTab = tab },
-                        text = { Text(tab.name) }
+                        text = { Text(stringResource(tab.labelRes())) }
                     )
                 }
             }
@@ -86,10 +105,10 @@ fun LibraryScreen(
             } else {
                 Box(modifier = Modifier.fillMaxSize().nestedScroll(pullState.nestedScrollConnection)) {
                     when (selectedTab) {
-                        LibraryTab.Artists -> ArtistsTab(uiState, onArtistClick)
-                        LibraryTab.Albums -> AlbumsTab(uiState, onAlbumClick, viewModel::setAlbumSort)
+                        LibraryTab.Artists -> ArtistsTab(uiState, onArtistClick, viewModel::shufflePlayArtist)
+                        LibraryTab.Albums -> AlbumsTab(uiState, onAlbumClick, viewModel::setAlbumSort, viewModel::playAlbum)
                         LibraryTab.Genres -> GenresTab(uiState, onGenreClick)
-                        LibraryTab.Playlists -> PlaylistsTab(uiState, onPlaylistClick)
+                        LibraryTab.Playlists -> PlaylistsTab(uiState, onPlaylistClick, viewModel::shufflePlayPlaylist)
                         LibraryTab.Favorites -> FavoritesTab(uiState, onAlbumClick, onArtistClick, viewModel)
                     }
                     PullToRefreshContainer(
@@ -110,9 +129,13 @@ fun LibraryScreen(
 }
 
 @Composable
-private fun ArtistsTab(uiState: LibraryUiState, onArtistClick: (String) -> Unit) {
+private fun ArtistsTab(
+    uiState: LibraryUiState,
+    onArtistClick: (String) -> Unit,
+    onShuffleClick: (String) -> Unit
+) {
     if (uiState.artists.isEmpty()) {
-        EmptyState(Icons.Default.Person, "Artists", "No artists found")
+        EmptyState(Icons.Default.Person, stringResource(R.string.label_artists), stringResource(R.string.library_no_artists_found))
     } else {
         LazyColumn(contentPadding = PaddingValues(bottom = 12.dp)) {
             items(uiState.artists, key = { it.id }, contentType = { "artist" }) { artist ->
@@ -121,10 +144,15 @@ private fun ArtistsTab(uiState: LibraryUiState, onArtistClick: (String) -> Unit)
                         Text(artist.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     },
                     supportingContent = {
-                        artist.albumCount?.let { Text("$it albums") }
+                        artist.albumCount?.let { Text(pluralStringResource(R.plurals.album_count, it, it)) }
                     },
                     leadingContent = {
                         Icon(Icons.Default.Person, contentDescription = null)
+                    },
+                    trailingContent = {
+                        IconButton(onClick = { onShuffleClick(artist.id) }) {
+                            Icon(Icons.Default.Shuffle, contentDescription = stringResource(R.string.action_shuffle))
+                        }
                     },
                     modifier = Modifier.clickable { onArtistClick(artist.id) }
                 )
@@ -137,7 +165,8 @@ private fun ArtistsTab(uiState: LibraryUiState, onArtistClick: (String) -> Unit)
 private fun AlbumsTab(
     uiState: LibraryUiState,
     onAlbumClick: (String) -> Unit,
-    onSortChange: (AlbumSort) -> Unit
+    onSortChange: (AlbumSort) -> Unit,
+    onPlayClick: (String) -> Unit
 ) {
     Column {
         var menuOpen by remember { mutableStateOf(false) }
@@ -145,12 +174,12 @@ private fun AlbumsTab(
             TextButton(onClick = { menuOpen = true }) {
                 Icon(Icons.Default.Sort, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(6.dp))
-                Text(uiState.albumSort.label)
+                Text(stringResource(uiState.albumSort.labelRes()))
             }
             DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                 AlbumSort.entries.forEach { sort ->
                     DropdownMenuItem(
-                        text = { Text(sort.label) },
+                        text = { Text(stringResource(sort.labelRes())) },
                         onClick = {
                             menuOpen = false
                             onSortChange(sort)
@@ -165,7 +194,7 @@ private fun AlbumsTab(
             }
         }
         if (uiState.albums.isEmpty()) {
-            EmptyState(Icons.Default.Album, "Albums", "No albums found")
+            EmptyState(Icons.Default.Album, stringResource(R.string.label_albums), stringResource(R.string.library_no_albums_found))
         } else {
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(150.dp),
@@ -178,6 +207,7 @@ private fun AlbumsTab(
                         album = album,
                         coverArtUrl = album.coverArt?.let { uiState.coverArtUrlBuilder?.invoke(it) },
                         modifier = Modifier.fillMaxWidth(),
+                        onPlayClick = { onPlayClick(album.id) },
                         onClick = { onAlbumClick(album.id) }
                     )
                 }
@@ -189,13 +219,13 @@ private fun AlbumsTab(
 @Composable
 private fun GenresTab(uiState: LibraryUiState, onGenreClick: (String) -> Unit) {
     if (uiState.genres.isEmpty()) {
-        EmptyState(Icons.Default.Category, "Genres", "No genres found")
+        EmptyState(Icons.Default.Category, stringResource(R.string.label_genres), stringResource(R.string.library_no_genres_found))
     } else {
         LazyColumn(contentPadding = PaddingValues(bottom = 12.dp)) {
             items(uiState.genres, key = { it.name }, contentType = { "genre" }) { genre ->
                 ListItem(
                     headlineContent = { Text(genre.name) },
-                    supportingContent = { genre.albumCount?.let { Text("$it albums") } },
+                    supportingContent = { genre.albumCount?.let { Text(pluralStringResource(R.plurals.album_count, it, it)) } },
                     leadingContent = { Icon(Icons.Default.Category, contentDescription = null) },
                     modifier = Modifier.clickable { onGenreClick(genre.name) }
                 )
@@ -205,9 +235,13 @@ private fun GenresTab(uiState: LibraryUiState, onGenreClick: (String) -> Unit) {
 }
 
 @Composable
-private fun PlaylistsTab(uiState: LibraryUiState, onPlaylistClick: (String) -> Unit) {
+private fun PlaylistsTab(
+    uiState: LibraryUiState,
+    onPlaylistClick: (String) -> Unit,
+    onShuffleClick: (String) -> Unit
+) {
     if (uiState.playlists.isEmpty()) {
-        EmptyState(Icons.AutoMirrored.Filled.QueueMusic, "Playlists", "No playlists found")
+        EmptyState(Icons.AutoMirrored.Filled.QueueMusic, stringResource(R.string.label_playlists), stringResource(R.string.library_no_playlists_found))
     } else {
         LazyColumn(contentPadding = PaddingValues(bottom = 12.dp)) {
             items(uiState.playlists, key = { it.id }, contentType = { "playlist" }) { playlist ->
@@ -217,13 +251,18 @@ private fun PlaylistsTab(uiState: LibraryUiState, onPlaylistClick: (String) -> U
                     },
                     supportingContent = {
                         val details = listOfNotNull(
-                            playlist.songCount?.let { "$it songs" },
+                            playlist.songCount?.let { pluralStringResource(R.plurals.song_count, it, it) },
                             playlist.owner
                         ).joinToString(" \u2022 ")
                         if (details.isNotEmpty()) Text(details)
                     },
                     leadingContent = {
                         Icon(Icons.AutoMirrored.Filled.QueueMusic, contentDescription = null)
+                    },
+                    trailingContent = {
+                        IconButton(onClick = { onShuffleClick(playlist.id) }) {
+                            Icon(Icons.Default.Shuffle, contentDescription = stringResource(R.string.action_shuffle))
+                        }
                     },
                     modifier = Modifier.clickable { onPlaylistClick(playlist.id) }
                 )
@@ -244,13 +283,13 @@ private fun FavoritesTab(
             uiState.starredSongs.isNotEmpty()
 
     if (!hasContent) {
-        EmptyState(Icons.Default.Favorite, "Favorites", "No favorites yet")
+        EmptyState(Icons.Default.Favorite, stringResource(R.string.label_favorites), stringResource(R.string.library_no_favorites_yet))
     } else {
         LazyColumn(contentPadding = PaddingValues(bottom = 12.dp)) {
             if (uiState.starredArtists.isNotEmpty()) {
                 item {
                     Text(
-                        "Artists",
+                        stringResource(R.string.label_artists),
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(16.dp)
                     )
@@ -259,6 +298,11 @@ private fun FavoritesTab(
                     ListItem(
                         headlineContent = { Text(artist.name) },
                         leadingContent = { Icon(Icons.Default.Person, contentDescription = null) },
+                        trailingContent = {
+                            IconButton(onClick = { viewModel.shufflePlayArtist(artist.id) }) {
+                                Icon(Icons.Default.Shuffle, contentDescription = stringResource(R.string.action_shuffle))
+                            }
+                        },
                         modifier = Modifier.clickable { onArtistClick(artist.id) }
                     )
                 }
@@ -267,7 +311,7 @@ private fun FavoritesTab(
             if (uiState.starredAlbums.isNotEmpty()) {
                 item {
                     Text(
-                        "Albums",
+                        stringResource(R.string.label_albums),
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(16.dp)
                     )
@@ -276,6 +320,7 @@ private fun FavoritesTab(
                     AlbumListItem(
                         album = album,
                         coverArtUrl = album.coverArt?.let { uiState.coverArtUrlBuilder?.invoke(it) },
+                        onPlayClick = { viewModel.playAlbum(album.id) },
                         onClick = { onAlbumClick(album.id) }
                     )
                 }
@@ -284,7 +329,7 @@ private fun FavoritesTab(
             if (uiState.starredSongs.isNotEmpty()) {
                 item {
                     Text(
-                        "Songs",
+                        stringResource(R.string.label_songs),
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(16.dp)
                     )

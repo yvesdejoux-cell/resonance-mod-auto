@@ -11,8 +11,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.resonance.music.R
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -130,25 +132,25 @@ fun ResonanceNavHost(
                             ) {
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Default.Home, contentDescription = null) },
-                                    label = { Text("Home") },
+                                    label = { Text(stringResource(R.string.nav_home)) },
                                     selected = currentRoute == Routes.HOME,
                                     onClick = { onTabSelected(Routes.HOME) }
                                 )
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Default.Search, contentDescription = null) },
-                                    label = { Text("Search") },
+                                    label = { Text(stringResource(R.string.nav_search)) },
                                     selected = currentRoute == Routes.SEARCH,
                                     onClick = { onTabSelected(Routes.SEARCH) }
                                 )
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Default.LibraryMusic, contentDescription = null) },
-                                    label = { Text("Library") },
+                                    label = { Text(stringResource(R.string.nav_library)) },
                                     selected = currentRoute == Routes.LIBRARY,
                                     onClick = { onTabSelected(Routes.LIBRARY) }
                                 )
                                 NavigationBarItem(
                                     icon = { Icon(Icons.Default.Settings, contentDescription = null) },
-                                    label = { Text("Settings") },
+                                    label = { Text(stringResource(R.string.nav_settings)) },
                                     selected = currentRoute == Routes.SETTINGS,
                                     onClick = { onTabSelected(Routes.SETTINGS) }
                                 )

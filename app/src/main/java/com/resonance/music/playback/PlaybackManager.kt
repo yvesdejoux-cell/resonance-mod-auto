@@ -366,6 +366,6 @@ class PlaybackManager @Inject constructor(
     }
 
     companion object {
-        private const val EXTRA_COVER_ART = "coverArt"
+        const val EXTRA_COVER_ART = "coverArt"
     }
 }

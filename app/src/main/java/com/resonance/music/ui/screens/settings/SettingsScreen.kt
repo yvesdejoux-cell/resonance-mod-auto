@@ -18,10 +18,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.resonance.music.BuildConfig
+import com.resonance.music.R
 import com.resonance.music.ui.components.SlimTopBar
 import com.resonance.music.ui.theme.AppTheme
 
@@ -37,24 +39,24 @@ fun SettingsScreen(
     if (showLogoutDialog) {
         AlertDialog(
             onDismissRequest = { showLogoutDialog = false },
-            title = { Text("Log out") },
-            text = { Text("This will disconnect from the server and clear your credentials.") },
+            title = { Text(stringResource(R.string.settings_logout)) },
+            text = { Text(stringResource(R.string.settings_logout_confirm_message)) },
             confirmButton = {
                 TextButton(onClick = {
                     showLogoutDialog = false
                     viewModel.logout()
                     onLogout()
-                }) { Text("Log out") }
+                }) { Text(stringResource(R.string.settings_logout)) }
             },
             dismissButton = {
-                TextButton(onClick = { showLogoutDialog = false }) { Text("Cancel") }
+                TextButton(onClick = { showLogoutDialog = false }) { Text(stringResource(R.string.action_cancel)) }
             }
         )
     }
 
     Scaffold(
         topBar = {
-            SlimTopBar("Settings")
+            SlimTopBar(stringResource(R.string.settings_title))
         }
     ) { padding ->
         Column(
@@ -65,7 +67,7 @@ fun SettingsScreen(
         ) {
             // ── Theme section ──
             Text(
-                "Theme",
+                stringResource(R.string.settings_section_theme),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -87,22 +89,52 @@ fun SettingsScreen(
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
+            // ── Language ──
+            Text(
+                stringResource(R.string.settings_section_language),
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                AppLanguage.entries.forEach { language ->
+                    FilterChip(
+                        selected = uiState.currentLanguage == language,
+                        onClick = { viewModel.setLanguage(language) },
+                        label = {
+                            Text(
+                                if (language == AppLanguage.SYSTEM) stringResource(R.string.settings_language_system)
+                                else language.displayName
+                            )
+                        }
+                    )
+                }
+            }
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
             // ── Server info ──
             Text(
-                "Server",
+                stringResource(R.string.settings_section_server),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
 
             ListItem(
-                headlineContent = { Text("Server") },
-                supportingContent = { Text(uiState.serverUrl.ifEmpty { "Not connected" }) },
+                headlineContent = { Text(stringResource(R.string.settings_server_label)) },
+                supportingContent = { Text(uiState.serverUrl.ifEmpty { stringResource(R.string.settings_not_connected) }) },
                 leadingContent = { Icon(Icons.Default.Cloud, contentDescription = null) }
             )
 
             ListItem(
-                headlineContent = { Text("Username") },
+                headlineContent = { Text(stringResource(R.string.settings_username_label)) },
                 supportingContent = { Text(uiState.username.ifEmpty { "-" }) },
                 leadingContent = { Icon(Icons.Default.Person, contentDescription = null) }
             )
@@ -111,15 +143,15 @@ fun SettingsScreen(
 
             // ── Playback ──
             Text(
-                "Playback",
+                stringResource(R.string.settings_section_playback),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
 
             ListItem(
-                headlineContent = { Text("Gapless playback") },
-                supportingContent = { Text("Seamless transition between tracks") },
+                headlineContent = { Text(stringResource(R.string.settings_gapless_playback)) },
+                supportingContent = { Text(stringResource(R.string.settings_gapless_playback_desc)) },
                 leadingContent = { Icon(Icons.Default.GraphicEq, contentDescription = null) },
                 trailingContent = {
                     Switch(checked = uiState.gaplessPlayback, onCheckedChange = viewModel::setGaplessPlayback)
@@ -127,8 +159,8 @@ fun SettingsScreen(
             )
 
             ListItem(
-                headlineContent = { Text("Scrobble plays") },
-                supportingContent = { Text("Report played songs to server") },
+                headlineContent = { Text(stringResource(R.string.settings_scrobble)) },
+                supportingContent = { Text(stringResource(R.string.settings_scrobble_desc)) },
                 leadingContent = { Icon(Icons.Default.Equalizer, contentDescription = null) },
                 trailingContent = {
                     Switch(checked = uiState.scrobbleEnabled, onCheckedChange = viewModel::setScrobbleEnabled)
@@ -139,15 +171,15 @@ fun SettingsScreen(
 
             // ── Account ──
             Text(
-                "Account",
+                stringResource(R.string.settings_section_account),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
 
             ListItem(
-                headlineContent = { Text("Log out") },
-                supportingContent = { Text("Disconnect from server") },
+                headlineContent = { Text(stringResource(R.string.settings_logout)) },
+                supportingContent = { Text(stringResource(R.string.settings_logout_desc)) },
                 leadingContent = {
                     Icon(
                         Icons.AutoMirrored.Filled.Logout,
@@ -167,14 +199,21 @@ fun SettingsScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    "Resonance v${BuildConfig.VERSION_NAME}",
+                    stringResource(R.string.settings_app_version, BuildConfig.VERSION_NAME),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    "Open source Navidrome client",
+                    stringResource(R.string.settings_app_tagline),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    stringResource(R.string.settings_modified_notice),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
             }
         }
@@ -232,7 +271,7 @@ private fun ThemeCard(
             Spacer(modifier = Modifier.height(4.dp))
             Icon(
                 Icons.Default.Check,
-                contentDescription = "Selected",
+                contentDescription = stringResource(R.string.theme_selected),
                 modifier = Modifier.size(16.dp),
                 tint = MaterialTheme.colorScheme.primary
             )

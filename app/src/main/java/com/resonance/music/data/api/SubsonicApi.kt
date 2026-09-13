@@ -28,6 +28,9 @@ interface SubsonicApi {
     @GET("rest/getAlbum")
     suspend fun getAlbum(@Query("id") id: String): SubsonicRoot
 
+    @GET("rest/getSong")
+    suspend fun getSong(@Query("id") id: String): SubsonicRoot
+
     // --- Album Lists ---
 
     @GET("rest/getAlbumList2")

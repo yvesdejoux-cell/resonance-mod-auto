@@ -8,8 +8,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.resonance.music.R
 import com.resonance.music.data.api.models.SongItem
 
 @Composable
@@ -52,7 +54,7 @@ fun SongListItem(
         trailingContent = {
             Box {
                 IconButton(onClick = { showMenu = true }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                    Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.content_desc_more_options))
                 }
                 DropdownMenu(
                     expanded = showMenu,
@@ -60,28 +62,28 @@ fun SongListItem(
                 ) {
                     actions.onPlayNext?.let { action ->
                         DropdownMenuItem(
-                            text = { Text("Play next") },
+                            text = { Text(stringResource(R.string.action_play_next)) },
                             onClick = { showMenu = false; action() },
                             leadingIcon = { Icon(Icons.Default.QueuePlayNext, contentDescription = null) }
                         )
                     }
                     actions.onAddToQueue?.let { action ->
                         DropdownMenuItem(
-                            text = { Text("Add to queue") },
+                            text = { Text(stringResource(R.string.action_add_to_queue)) },
                             onClick = { showMenu = false; action() },
                             leadingIcon = { Icon(Icons.Default.PlaylistAdd, contentDescription = null) }
                         )
                     }
                     actions.onGoToAlbum?.let { action ->
                         DropdownMenuItem(
-                            text = { Text("Go to album") },
+                            text = { Text(stringResource(R.string.action_go_to_album)) },
                             onClick = { showMenu = false; action() },
                             leadingIcon = { Icon(Icons.Default.Album, contentDescription = null) }
                         )
                     }
                     actions.onGoToArtist?.let { action ->
                         DropdownMenuItem(
-                            text = { Text("Go to artist") },
+                            text = { Text(stringResource(R.string.action_go_to_artist)) },
                             onClick = { showMenu = false; action() },
                             leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) }
                         )

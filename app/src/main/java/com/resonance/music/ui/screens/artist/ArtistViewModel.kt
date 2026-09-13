@@ -131,4 +131,12 @@ class ArtistViewModel @Inject constructor(
     fun playNext(song: SongItem) = playbackManager.playNext(listOf(song))
     fun addToQueue(song: SongItem) = playbackManager.addToQueue(listOf(song))
     fun toggleRepeat() = playbackManager.toggleRepeat()
+
+    /** Fetch an album's tracks and start playing it. */
+    fun playAlbum(albumId: String) {
+        viewModelScope.launch {
+            val songs = runCatching { musicRepository.getAlbumDetail(albumId)?.song }.getOrNull().orEmpty()
+            if (songs.isNotEmpty()) playbackManager.playSongs(songs)
+        }
+    }
 }

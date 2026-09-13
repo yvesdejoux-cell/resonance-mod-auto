@@ -14,10 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.resonance.music.R
 import com.resonance.music.playback.NowPlaying
 import com.resonance.music.ui.components.MarqueeText
 import kotlinx.coroutines.flow.StateFlow
@@ -69,7 +71,7 @@ fun MiniPlayer(
                     if (coverArtUrl != null) {
                         AsyncImage(
                             model = coverArtUrl,
-                            contentDescription = "Album art",
+                            contentDescription = stringResource(R.string.content_desc_album_art),
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop
                         )
@@ -105,12 +107,12 @@ fun MiniPlayer(
                 IconButton(onClick = onPlayPauseClick) {
                     Icon(
                         imageVector = if (nowPlaying.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                        contentDescription = if (nowPlaying.isPlaying) "Pause" else "Play"
+                        contentDescription = if (nowPlaying.isPlaying) stringResource(R.string.action_pause) else stringResource(R.string.action_play)
                     )
                 }
 
                 IconButton(onClick = onNextClick) {
-                    Icon(Icons.Default.SkipNext, contentDescription = "Next")
+                    Icon(Icons.Default.SkipNext, contentDescription = stringResource(R.string.action_next))
                 }
             }
         }

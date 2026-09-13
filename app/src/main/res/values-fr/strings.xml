@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Resonance Mod Auto</string>
+
+    <!-- Common -->
+    <string name="content_desc_back">Retour</string>
+    <string name="action_play">Lecture</string>
+    <string name="action_pause">Pause</string>
+    <string name="action_shuffle">Aléatoire</string>
+    <string name="action_next">Suivant</string>
+    <string name="action_previous">Précédent</string>
+    <string name="action_repeat">Répéter</string>
+    <string name="action_loop">Boucle</string>
+    <string name="action_play_next">Lire ensuite</string>
+    <string name="action_add_to_queue">Ajouter à la file d\'attente</string>
+    <string name="action_go_to_album">Aller à l\'album</string>
+    <string name="action_go_to_artist">Aller à l\'artiste</string>
+    <string name="content_desc_more_options">Plus d\'options</string>
+    <string name="action_retry">Réessayer</string>
+    <string name="action_see_all">Tout voir</string>
+    <string name="action_cancel">Annuler</string>
+    <string name="content_desc_album_art">Pochette de l\'album</string>
+    <string name="error_generic">Erreur</string>
+    <string name="error_unknown">Erreur inconnue</string>
+
+    <!-- Shared section / tab labels -->
+    <string name="label_artists">Artistes</string>
+    <string name="label_albums">Albums</string>
+    <string name="label_genres">Genres</string>
+    <string name="label_playlists">Playlists</string>
+    <string name="label_favorites">Favoris</string>
+    <string name="label_songs">Titres</string>
+    <string name="label_tracks">Titres</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Accueil</string>
+    <string name="nav_search">Recherche</string>
+    <string name="nav_library">Bibliothèque</string>
+    <string name="nav_settings">Réglages</string>
+
+    <!-- Settings screen -->
+    <string name="settings_title">Réglages</string>
+    <string name="settings_logout">Se déconnecter</string>
+    <string name="settings_logout_confirm_message">Ceci vous déconnectera du serveur et effacera vos identifiants.</string>
+    <string name="settings_section_theme">Thème</string>
+    <string name="settings_section_server">Serveur</string>
+    <string name="settings_server_label">Serveur</string>
+    <string name="settings_not_connected">Non connecté</string>
+    <string name="settings_username_label">Nom d\'utilisateur</string>
+    <string name="settings_section_playback">Lecture</string>
+    <string name="settings_gapless_playback">Lecture sans interruption</string>
+    <string name="settings_gapless_playback_desc">Transition fluide entre les titres</string>
+    <string name="settings_scrobble">Signaler les écoutes</string>
+    <string name="settings_scrobble_desc">Signaler les titres écoutés au serveur</string>
+    <string name="settings_section_account">Compte</string>
+    <string name="settings_logout_desc">Se déconnecter du serveur</string>
+    <string name="settings_app_version">Resonance v%1$s</string>
+    <string name="settings_app_tagline">Client Navidrome open source</string>
+    <string name="settings_modified_notice">Modifié en 2026 à partir de Resonance par AlanHuang99 (GPLv3) — ajoute le support Android Auto, la traduction française et des raccourcis de lecture.</string>
+    <string name="settings_section_language">Langue</string>
+    <string name="settings_language_system">Système</string>
+    <string name="theme_selected">Sélectionné</string>
+
+    <!-- Login screen -->
+    <string name="login_tagline">Connectez-vous à votre serveur Navidrome</string>
+    <string name="login_server_url">URL du serveur</string>
+    <string name="login_server_url_placeholder">https://music.example.com</string>
+    <string name="login_username">Nom d\'utilisateur</string>
+    <string name="login_password">Mot de passe</string>
+    <string name="login_show_password">Afficher le mot de passe</string>
+    <string name="login_hide_password">Masquer le mot de passe</string>
+    <string name="login_connect">Se connecter</string>
+
+    <!-- Library screen -->
+    <string name="library_title">Bibliothèque</string>
+    <string name="library_no_artists_found">Aucun artiste trouvé</string>
+    <string name="library_no_albums_found">Aucun album trouvé</string>
+    <string name="library_no_genres_found">Aucun genre trouvé</string>
+    <string name="library_no_playlists_found">Aucune playlist trouvée</string>
+    <string name="library_no_favorites_yet">Aucun favori pour l\'instant</string>
+    <string name="sort_az">A–Z</string>
+    <string name="sort_newest">Ajoutés récemment</string>
+    <string name="sort_recent">Écoutés récemment</string>
+    <string name="sort_frequent">Les plus écoutés</string>
+    <string name="sort_random">Aléatoire</string>
+
+    <!-- Home screen -->
+    <string name="home_greeting_morning">Bonjour</string>
+    <string name="home_greeting_afternoon">Bon après-midi</string>
+    <string name="home_greeting_evening">Bonsoir</string>
+    <string name="home_shuffle_all">Tout lire aléatoirement</string>
+    <string name="home_shelf_recent">Écoutés récemment</string>
+    <string name="home_shelf_newest">Derniers ajouts</string>
+    <string name="home_shelf_frequent">Les plus écoutés</string>
+    <string name="home_shelf_random">Sélection aléatoire</string>
+    <string name="home_jump_back_in">REPRENDRE</string>
+    <string name="home_load_failed">Échec du chargement</string>
+
+    <!-- Artist screen -->
+    <string name="artist_remove_from_favorites">Retirer des favoris</string>
+    <string name="artist_add_to_favorites">Ajouter aux favoris</string>
+    <string name="artist_similar_artists">Artistes similaires</string>
+    <string name="content_desc_artist_image">Photo de l\'artiste</string>
+
+    <!-- Album screen -->
+    <string name="album_options">Options de l\'album</string>
+    <string name="album_disc_number">Disque %1$d</string>
+
+    <!-- Playlist screen -->
+    <string name="content_desc_playlist_art">Pochette de la playlist</string>
+    <string name="playlist_options">Options de la playlist</string>
+
+    <!-- Genre screen -->
+    <string name="genre_no_albums">Aucun album dans ce genre</string>
+
+    <!-- Player screen -->
+    <string name="player_now_playing">Lecture en cours</string>
+    <string name="player_favorite">Favori</string>
+    <string name="player_lyrics">Paroles</string>
+    <string name="player_queue">File d\'attente</string>
+
+    <!-- Queue screen -->
+    <string name="queue_title">File d\'attente</string>
+    <string name="queue_clear">Vider la file d\'attente</string>
+    <string name="queue_empty_title">La file d\'attente est vide</string>
+    <string name="queue_empty_subtitle">Lancez de la musique pour remplir la file d\'attente</string>
+    <string name="content_desc_reorder">Réorganiser</string>
+
+    <!-- Lyrics screen -->
+    <string name="lyrics_title">Paroles</string>
+    <string name="lyrics_none_available">Aucune parole disponible</string>
+
+    <!-- Search screen -->
+    <string name="search_placeholder">Rechercher artistes, albums, titres…</string>
+    <string name="search_clear">Effacer</string>
+    <string name="search_empty_message">Recherchez dans votre bibliothèque musicale</string>
+
+    <plurals name="album_count">
+        <item quantity="one">%1$d album</item>
+        <item quantity="other">%1$d albums</item>
+    </plurals>
+
+    <plurals name="song_count">
+        <item quantity="one">%1$d titre</item>
+        <item quantity="other">%1$d titres</item>
+    </plurals>
+</resources>

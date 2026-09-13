@@ -69,6 +69,22 @@ class SearchViewModel @Inject constructor(
     fun playNext(song: SongItem) = playbackManager.playNext(listOf(song))
     fun addToQueue(song: SongItem) = playbackManager.addToQueue(listOf(song))
 
+    /** Fetch an album's tracks and start playing it. */
+    fun playAlbum(albumId: String) {
+        viewModelScope.launch {
+            val songs = runCatching { musicRepository.getAlbumDetail(albumId)?.song }.getOrNull().orEmpty()
+            if (songs.isNotEmpty()) playbackManager.playSongs(songs)
+        }
+    }
+
+    /** Fetch every song by an artist (across all their albums) and shuffle-play it. */
+    fun shufflePlayArtist(artistId: String) {
+        viewModelScope.launch {
+            val songs = runCatching { musicRepository.getArtistSongs(artistId) }.getOrDefault(emptyList())
+            if (songs.isNotEmpty()) playbackManager.playSongs(songs.shuffled())
+        }
+    }
+
     fun getCoverArtUrl(coverArtId: String, size: Int = 128): String? =
         musicRepository.getCoverArtUrl(coverArtId, size)
 }

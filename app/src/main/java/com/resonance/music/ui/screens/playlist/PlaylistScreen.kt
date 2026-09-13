@@ -15,10 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.resonance.music.R
 import com.resonance.music.ui.components.SongActions
 import com.resonance.music.ui.components.SongListItem
 
@@ -49,23 +52,23 @@ fun PlaylistScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.content_desc_back))
                     }
                 },
                 actions = {
                     var showPlaylistMenu by remember { mutableStateOf(false) }
                     Box {
                         IconButton(onClick = { showPlaylistMenu = true }) {
-                            Icon(Icons.Default.MoreVert, contentDescription = "Playlist options")
+                            Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.playlist_options))
                         }
                         DropdownMenu(expanded = showPlaylistMenu, onDismissRequest = { showPlaylistMenu = false }) {
                             DropdownMenuItem(
-                                text = { Text("Play next") },
+                                text = { Text(stringResource(R.string.action_play_next)) },
                                 onClick = { showPlaylistMenu = false; viewModel.playAllNext() },
                                 leadingIcon = { Icon(Icons.Default.QueuePlayNext, contentDescription = null) }
                             )
                             DropdownMenuItem(
-                                text = { Text("Add to queue") },
+                                text = { Text(stringResource(R.string.action_add_to_queue)) },
                                 onClick = { showPlaylistMenu = false; viewModel.addAllToQueue() },
                                 leadingIcon = { Icon(Icons.Default.PlaylistAdd, contentDescription = null) }
                             )
@@ -87,7 +90,7 @@ fun PlaylistScreen(
                 modifier = Modifier.fillMaxSize().padding(padding),
                 contentAlignment = Alignment.Center
             ) {
-                Text(uiState.error ?: "Error", color = MaterialTheme.colorScheme.error)
+                Text(uiState.error ?: stringResource(R.string.error_generic), color = MaterialTheme.colorScheme.error)
             }
         } else {
             LazyColumn(
@@ -112,7 +115,7 @@ fun PlaylistScreen(
                             if (uiState.coverArtUrl != null) {
                                 AsyncImage(
                                     model = uiState.coverArtUrl,
-                                    contentDescription = "Playlist art",
+                                    contentDescription = stringResource(R.string.content_desc_playlist_art),
                                     modifier = Modifier.fillMaxSize(),
                                     contentScale = ContentScale.Crop
                                 )
@@ -137,7 +140,7 @@ fun PlaylistScreen(
 
                         uiState.songCount?.let { count ->
                             Text(
-                                text = "$count songs",
+                                text = pluralStringResource(R.plurals.song_count, count, count),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -162,12 +165,12 @@ fun PlaylistScreen(
                             Button(onClick = { viewModel.playAll(shuffle = false) }) {
                                 Icon(Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(18.dp))
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text("Play")
+                                Text(stringResource(R.string.action_play))
                             }
                             OutlinedButton(onClick = { viewModel.playAll(shuffle = true) }) {
                                 Icon(Icons.Default.Shuffle, contentDescription = null, modifier = Modifier.size(18.dp))
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text("Shuffle")
+                                Text(stringResource(R.string.action_shuffle))
                             }
                         }
                     }

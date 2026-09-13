@@ -17,11 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.resonance.music.R
 import com.resonance.music.ui.components.MarqueeText
 import kotlinx.coroutines.flow.StateFlow
 
@@ -40,10 +42,10 @@ fun PlayerScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Now Playing") },
+                title = { Text(stringResource(R.string.player_now_playing)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Back")
+                        Icon(Icons.Default.KeyboardArrowDown, contentDescription = stringResource(R.string.content_desc_back))
                     }
                 }
             )
@@ -90,7 +92,7 @@ fun PlayerScreen(
                 if (uiState.coverArtUrl != null) {
                     AsyncImage(
                         model = uiState.coverArtUrl,
-                        contentDescription = "Album art",
+                        contentDescription = stringResource(R.string.content_desc_album_art),
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
@@ -150,7 +152,7 @@ fun PlayerScreen(
                 IconButton(onClick = viewModel::toggleShuffle) {
                     Icon(
                         Icons.Default.Shuffle,
-                        contentDescription = "Shuffle",
+                        contentDescription = stringResource(R.string.action_shuffle),
                         tint = if (uiState.shuffleEnabled) MaterialTheme.colorScheme.primary
                                else MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -159,7 +161,7 @@ fun PlayerScreen(
                 IconButton(onClick = viewModel::previous) {
                     Icon(
                         Icons.Default.SkipPrevious,
-                        contentDescription = "Previous",
+                        contentDescription = stringResource(R.string.action_previous),
                         modifier = Modifier.size(36.dp)
                     )
                 }
@@ -170,7 +172,7 @@ fun PlayerScreen(
                 ) {
                     Icon(
                         imageVector = if (uiState.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                        contentDescription = if (uiState.isPlaying) "Pause" else "Play",
+                        contentDescription = if (uiState.isPlaying) stringResource(R.string.action_pause) else stringResource(R.string.action_play),
                         modifier = Modifier.size(32.dp)
                     )
                 }
@@ -178,7 +180,7 @@ fun PlayerScreen(
                 IconButton(onClick = viewModel::next) {
                     Icon(
                         Icons.Default.SkipNext,
-                        contentDescription = "Next",
+                        contentDescription = stringResource(R.string.action_next),
                         modifier = Modifier.size(36.dp)
                     )
                 }
@@ -189,7 +191,7 @@ fun PlayerScreen(
                             RepeatMode.ONE -> Icons.Default.RepeatOne
                             else -> Icons.Default.Repeat
                         },
-                        contentDescription = "Repeat",
+                        contentDescription = stringResource(R.string.action_repeat),
                         tint = if (uiState.repeatMode != RepeatMode.OFF) MaterialTheme.colorScheme.primary
                                else MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -204,15 +206,15 @@ fun PlayerScreen(
                 IconButton(onClick = viewModel::toggleFavorite) {
                     Icon(
                         imageVector = if (uiState.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                        contentDescription = "Favorite",
+                        contentDescription = stringResource(R.string.player_favorite),
                         tint = if (uiState.isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 IconButton(onClick = onLyricsClick) {
-                    Icon(Icons.Default.Lyrics, contentDescription = "Lyrics")
+                    Icon(Icons.Default.Lyrics, contentDescription = stringResource(R.string.player_lyrics))
                 }
                 IconButton(onClick = onQueueClick) {
-                    Icon(Icons.AutoMirrored.Filled.QueueMusic, contentDescription = "Queue")
+                    Icon(Icons.AutoMirrored.Filled.QueueMusic, contentDescription = stringResource(R.string.player_queue))
                 }
             }
         }

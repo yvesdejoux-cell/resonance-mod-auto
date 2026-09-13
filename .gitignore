@@ -9,6 +9,7 @@
 
 # Gradle
 .gradle/
+.kotlin/
 gradle-app.setting
 !gradle-wrapper.jar
 !gradle-wrapper.properties
@@ -20,6 +21,7 @@ gradle-app.setting
 *~
 .DS_Store
 *.code-workspace
+.claude/
 
 # Local config
 local.properties

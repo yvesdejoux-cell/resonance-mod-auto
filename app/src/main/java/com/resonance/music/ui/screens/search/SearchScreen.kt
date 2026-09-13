@@ -11,8 +11,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.resonance.music.R
 import com.resonance.music.ui.components.AlbumListItem
 import com.resonance.music.ui.components.SlimTopBar
 import com.resonance.music.ui.components.SongActions
@@ -40,7 +42,7 @@ fun SearchScreen(
                 TextField(
                     value = uiState.query,
                     onValueChange = viewModel::onQueryChange,
-                    placeholder = { Text("Search artists, albums, songs...") },
+                    placeholder = { Text(stringResource(R.string.search_placeholder)) },
                     singleLine = true,
                     colors = TextFieldDefaults.colors(
                         unfocusedContainerColor = MaterialTheme.colorScheme.surface,
@@ -52,7 +54,7 @@ fun SearchScreen(
                 )
                 if (uiState.query.isNotEmpty()) {
                     IconButton(onClick = { viewModel.onQueryChange("") }) {
-                        Icon(Icons.Default.Clear, contentDescription = "Clear")
+                        Icon(Icons.Default.Clear, contentDescription = stringResource(R.string.search_clear))
                     }
                 }
             }
@@ -79,7 +81,7 @@ fun SearchScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        "Search your music library",
+                        stringResource(R.string.search_empty_message),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -94,7 +96,7 @@ fun SearchScreen(
                 if (uiState.artists.isNotEmpty()) {
                     item {
                         Text(
-                            "Artists",
+                            stringResource(R.string.label_artists),
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(16.dp)
                         )
@@ -105,6 +107,11 @@ fun SearchScreen(
                             leadingContent = {
                                 Icon(Icons.Default.Person, contentDescription = null)
                             },
+                            trailingContent = {
+                                IconButton(onClick = { viewModel.shufflePlayArtist(artist.id) }) {
+                                    Icon(Icons.Default.Shuffle, contentDescription = stringResource(R.string.action_shuffle))
+                                }
+                            },
                             modifier = Modifier.clickable { onArtistClick(artist.id) }
                         )
                     }
@@ -114,7 +121,7 @@ fun SearchScreen(
                 if (uiState.albums.isNotEmpty()) {
                     item {
                         Text(
-                            "Albums",
+                            stringResource(R.string.label_albums),
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(16.dp)
                         )
@@ -123,6 +130,7 @@ fun SearchScreen(
                         AlbumListItem(
                             album = album,
                             coverArtUrl = album.coverArt?.let { coverArtBuilder(it) },
+                            onPlayClick = { viewModel.playAlbum(album.id) },
                             onClick = { onAlbumClick(album.id) }
                         )
                     }
@@ -132,7 +140,7 @@ fun SearchScreen(
                 if (uiState.songs.isNotEmpty()) {
                     item {
                         Text(
-                            "Songs",
+                            stringResource(R.string.label_songs),
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(16.dp)
                         )

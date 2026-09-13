@@ -22,10 +22,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.resonance.music.R
 import com.resonance.music.data.api.models.SongItem
 import com.resonance.music.data.repository.MusicRepository
 import com.resonance.music.playback.PlaybackManager
@@ -44,16 +46,16 @@ fun QueueScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Queue") },
+                title = { Text(stringResource(R.string.queue_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.content_desc_back))
                     }
                 },
                 actions = {
                     if (queue.isNotEmpty()) {
                         IconButton(onClick = { playbackManager.clearQueue() }) {
-                            Icon(Icons.Default.ClearAll, contentDescription = "Clear queue")
+                            Icon(Icons.Default.ClearAll, contentDescription = stringResource(R.string.queue_clear))
                         }
                     }
                 }
@@ -73,9 +75,9 @@ fun QueueScreen(
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text("Queue is empty", style = MaterialTheme.typography.titleMedium)
+                    Text(stringResource(R.string.queue_empty_title), style = MaterialTheme.typography.titleMedium)
                     Text(
-                        "Play some music to fill the queue",
+                        stringResource(R.string.queue_empty_subtitle),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -145,7 +147,7 @@ fun QueueScreen(
                                 dragHandle = {
                                     Icon(
                                         Icons.Default.DragHandle,
-                                        contentDescription = "Reorder",
+                                        contentDescription = stringResource(R.string.content_desc_reorder),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.draggableHandle()
                                     )

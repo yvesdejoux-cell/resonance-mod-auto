@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.resonance.music.R
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,10 +59,10 @@ fun LyricsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Lyrics") },
+                title = { Text(stringResource(R.string.lyrics_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Back")
+                        Icon(Icons.Default.KeyboardArrowDown, contentDescription = stringResource(R.string.content_desc_back))
                     }
                 }
             )
@@ -88,7 +90,7 @@ fun LyricsScreen(
                     if (uiState.coverArtUrl != null) {
                         AsyncImage(
                             model = uiState.coverArtUrl,
-                            contentDescription = "Album art",
+                            contentDescription = stringResource(R.string.content_desc_album_art),
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop
                         )
@@ -145,7 +147,7 @@ fun LyricsScreen(
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                "No lyrics available",
+                                stringResource(R.string.lyrics_none_available),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

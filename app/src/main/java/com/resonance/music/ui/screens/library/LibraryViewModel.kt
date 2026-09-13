@@ -12,12 +12,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-enum class AlbumSort(val type: String, val label: String) {
-    AZ("alphabeticalByName", "A–Z"),
-    NEWEST("newest", "Recently added"),
-    RECENT("recent", "Recently played"),
-    FREQUENT("frequent", "Most played"),
-    RANDOM("random", "Random")
+enum class AlbumSort(val type: String) {
+    AZ("alphabeticalByName"),
+    NEWEST("newest"),
+    RECENT("recent"),
+    FREQUENT("frequent"),
+    RANDOM("random")
 }
 
 data class LibraryUiState(
@@ -159,6 +159,30 @@ class LibraryViewModel @Inject constructor(
 
     fun playNext(song: SongItem) = playbackManager.playNext(listOf(song))
     fun addToQueue(song: SongItem) = playbackManager.addToQueue(listOf(song))
+
+    /** Fetch an album's tracks and start playing it. */
+    fun playAlbum(albumId: String) {
+        viewModelScope.launch {
+            val songs = runCatching { musicRepository.getAlbumDetail(albumId)?.song }.getOrNull().orEmpty()
+            if (songs.isNotEmpty()) playbackManager.playSongs(songs)
+        }
+    }
+
+    /** Fetch every song by an artist (across all their albums) and shuffle-play it. */
+    fun shufflePlayArtist(artistId: String) {
+        viewModelScope.launch {
+            val songs = runCatching { musicRepository.getArtistSongs(artistId) }.getOrDefault(emptyList())
+            if (songs.isNotEmpty()) playbackManager.playSongs(songs.shuffled())
+        }
+    }
+
+    /** Fetch a playlist's tracks and shuffle-play it. */
+    fun shufflePlayPlaylist(playlistId: String) {
+        viewModelScope.launch {
+            val songs = runCatching { musicRepository.getPlaylistDetail(playlistId)?.entry }.getOrNull().orEmpty()
+            if (songs.isNotEmpty()) playbackManager.playSongs(songs.shuffled())
+        }
+    }
 
     /**
      * Re-fetch the visible tab for pull-to-refresh. Suspends until done so the

@@ -22,6 +22,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -31,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.resonance.music.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,10 +65,10 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "RESONANCE",
+                text = "RESONANCE MOD",
                 style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.Medium,
-                    letterSpacing = 6.sp
+                    letterSpacing = 4.sp
                 ),
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 1
@@ -75,7 +77,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(
-                text = "Connect to your Navidrome server",
+                text = stringResource(R.string.login_tagline),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
@@ -86,8 +88,8 @@ fun LoginScreen(
             OutlinedTextField(
                 value = uiState.serverUrl,
                 onValueChange = viewModel::onServerUrlChange,
-                label = { Text("Server URL") },
-                placeholder = { Text("https://music.example.com") },
+                label = { Text(stringResource(R.string.login_server_url)) },
+                placeholder = { Text(stringResource(R.string.login_server_url_placeholder)) },
                 leadingIcon = { Icon(Icons.Default.Cloud, contentDescription = null) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
@@ -106,7 +108,7 @@ fun LoginScreen(
             OutlinedTextField(
                 value = uiState.username,
                 onValueChange = viewModel::onUsernameChange,
-                label = { Text("Username") },
+                label = { Text(stringResource(R.string.login_username)) },
                 leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
@@ -122,7 +124,7 @@ fun LoginScreen(
             OutlinedTextField(
                 value = uiState.password,
                 onValueChange = viewModel::onPasswordChange,
-                label = { Text("Password") },
+                label = { Text(stringResource(R.string.login_password)) },
                 leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
@@ -132,7 +134,7 @@ fun LoginScreen(
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(
                             imageVector = if (passwordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                            contentDescription = if (passwordVisible) stringResource(R.string.login_hide_password) else stringResource(R.string.login_show_password)
                         )
                     }
                 },
@@ -178,7 +180,7 @@ fun LoginScreen(
                     )
                 } else {
                     Text(
-                        "Connect",
+                        stringResource(R.string.login_connect),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
