@@ -10,12 +10,12 @@ plugins {
 
 android {
     namespace = "com.resonance.music"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "fr.ydjixi.resonancemodauto"
         minSdk = 31
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 10
         versionName = "0.6.1"
 
