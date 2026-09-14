@@ -6,9 +6,6 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <!-- Media-only app: works on Android Auto without requiring a car dashboard. -->
-    <uses-feature android:name="android.hardware.type.automotive" android:required="false" />
-
     <application
         android:name=".ResonanceApp"
         android:allowBackup="true"
