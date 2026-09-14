@@ -4,14 +4,17 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import androidx.media3.session.CommandButton
 import androidx.media3.session.LibraryResult
 import androidx.media3.session.MediaLibraryService.LibraryParams
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import androidx.media3.session.MediaSession
+import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionResult
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
+import com.resonance.music.R
 import com.resonance.music.data.api.models.AlbumItem
 import com.resonance.music.data.api.models.ArtistItem
 import com.resonance.music.data.api.models.PlaylistItem
@@ -39,6 +42,11 @@ private const val PLAYLIST_PREFIX = "playlist/"
 private const val SHUFFLE_ARTIST_PREFIX = "shuffle_artist/"
 private const val PLAY_ALBUM_PREFIX = "play_album/"
 private const val SHUFFLE_PLAYLIST_PREFIX = "shuffle_playlist/"
+private const val SHUFFLE_FAVORITE_SONGS_ID = "shuffle_favorite_songs"
+
+// Custom session command that surfaces as a heart button on the car's Now Playing
+// screen (and the notification), alongside the standard transport controls.
+private const val COMMAND_TOGGLE_FAVORITE = "com.resonance.music.TOGGLE_FAVORITE"
 
 /**
  * Builds the Android Auto / Automotive browse tree (Artistes, Albums, Playlists,
@@ -50,6 +58,76 @@ class MusicLibrarySessionCallback(
     private val musicRepository: MusicRepository,
     private val scope: CoroutineScope
 ) : MediaLibrarySession.Callback {
+
+    private val toggleFavoriteCommand = SessionCommand(COMMAND_TOGGLE_FAVORITE, Bundle.EMPTY)
+    private var currentSongId: String? = null
+    private var currentIsFavorite: Boolean = false
+
+    override fun onConnect(
+        session: MediaSession,
+        controller: MediaSession.ControllerInfo
+    ): MediaSession.ConnectionResult {
+        val result = super.onConnect(session, controller)
+        val sessionCommands = result.availableSessionCommands.buildUpon()
+            .add(toggleFavoriteCommand)
+            .build()
+        return MediaSession.ConnectionResult.accept(sessionCommands, result.availablePlayerCommands)
+    }
+
+    override fun onPostConnect(session: MediaSession, controller: MediaSession.ControllerInfo) {
+        session.setCustomLayout(controller, listOf(favoriteButton()))
+    }
+
+    override fun onCustomCommand(
+        session: MediaSession,
+        controller: MediaSession.ControllerInfo,
+        customCommand: SessionCommand,
+        args: Bundle
+    ): ListenableFuture<SessionResult> {
+        if (customCommand.customAction != COMMAND_TOGGLE_FAVORITE) {
+            return Futures.immediateFuture(SessionResult(SessionResult.RESULT_ERROR_NOT_SUPPORTED))
+        }
+        val songId = currentSongId ?: session.player.currentMediaItem?.mediaId
+        if (songId == null) {
+            return Futures.immediateFuture(SessionResult(SessionResult.RESULT_ERROR_BAD_VALUE))
+        }
+        val wasFavorite = currentIsFavorite
+        currentIsFavorite = !wasFavorite
+        refreshFavoriteLayout(session)
+        return scope.future {
+            try {
+                if (wasFavorite) musicRepository.unstar(songId) else musicRepository.star(songId)
+                SessionResult(SessionResult.RESULT_SUCCESS)
+            } catch (_: Exception) {
+                currentIsFavorite = wasFavorite
+                refreshFavoriteLayout(session)
+                SessionResult(SessionResult.RESULT_ERROR_UNKNOWN)
+            }
+        }
+    }
+
+    /** Called by [PlaybackService] whenever the player moves to a new media item, so the
+     *  heart button reflects that track's favorite status instead of the previous one. */
+    fun onTrackChanged(session: MediaSession, mediaItem: MediaItem?) {
+        currentSongId = mediaItem?.mediaId
+        currentIsFavorite = mediaItem?.mediaMetadata?.extras?.getBoolean(PlaybackManager.EXTRA_STARRED) ?: false
+        refreshFavoriteLayout(session)
+    }
+
+    private fun refreshFavoriteLayout(session: MediaSession) {
+        val layout = listOf(favoriteButton())
+        session.connectedControllers.forEach { controller ->
+            session.setCustomLayout(controller, layout)
+        }
+    }
+
+    private fun favoriteButton(): CommandButton =
+        CommandButton.Builder()
+            .setDisplayName(if (currentIsFavorite) "Retirer des favoris" else "Ajouter aux favoris")
+            .setSessionCommand(toggleFavoriteCommand)
+            .setIconResId(if (currentIsFavorite) R.drawable.ic_favorite_filled else R.drawable.ic_favorite_outline)
+            .setEnabled(true)
+            .build()
 
     override fun onGetLibraryRoot(
         session: MediaLibrarySession,
@@ -79,7 +157,10 @@ class MusicLibrarySessionCallback(
                 )
                 parentId == PLAYLISTS_ID -> playlistItems(musicRepository.getPlaylists())
                 parentId == FAVORITES_ID -> favoritesChildren()
-                parentId == FAVORITE_SONGS_ID -> songItems(musicRepository.getStarred().song.orEmpty())
+                parentId == FAVORITE_SONGS_ID -> {
+                    val songs = musicRepository.getStarred().song.orEmpty()
+                    if (songs.isEmpty()) null else listOf(shuffleFavoriteSongsItem()) + songItems(songs)
+                }
                 parentId == FAVORITE_ALBUMS_ID -> albumItems(musicRepository.getStarred().album.orEmpty())
                 parentId == FAVORITE_ARTISTS_ID -> artistItems(musicRepository.getStarred().artist.orEmpty())
                 parentId.startsWith(ARTIST_PREFIX) -> {
@@ -184,6 +265,10 @@ class MusicLibrarySessionCallback(
                     musicRepository.getPlaylistDetail(id.removePrefix(SHUFFLE_PLAYLIST_PREFIX))?.entry
                         ?.shuffled()
                         ?.mapNotNull { songPlayableItem(it) }
+                id == SHUFFLE_FAVORITE_SONGS_ID ->
+                    musicRepository.getStarred().song.orEmpty()
+                        .shuffled()
+                        .mapNotNull { songPlayableItem(it) }
                 id.startsWith(ALBUM_PREFIX) ->
                     musicRepository.getAlbumDetail(id.removePrefix(ALBUM_PREFIX))?.song
                         ?.mapNotNull { songPlayableItem(it) }
@@ -301,6 +386,9 @@ class MusicLibrarySessionCallback(
     private fun shufflePlaylistItem(playlistId: String): MediaItem =
         quickActionItem(SHUFFLE_PLAYLIST_PREFIX + playlistId, "🔀 Lecture aléatoire")
 
+    private fun shuffleFavoriteSongsItem(): MediaItem =
+        quickActionItem(SHUFFLE_FAVORITE_SONGS_ID, "🔀 Lecture aléatoire")
+
     private fun quickActionItem(id: String, title: String): MediaItem =
         MediaItem.Builder()
             .setMediaId(id)
@@ -316,7 +404,10 @@ class MusicLibrarySessionCallback(
 
     private fun songPlayableItem(song: SongItem): MediaItem? {
         val uri = musicRepository.getStreamUrl(song.id) ?: return null
-        val extras = Bundle().apply { song.coverArt?.let { putString(PlaybackManager.EXTRA_COVER_ART, it) } }
+        val extras = Bundle().apply {
+            song.coverArt?.let { putString(PlaybackManager.EXTRA_COVER_ART, it) }
+            putBoolean(PlaybackManager.EXTRA_STARRED, song.starred != null)
+        }
         return MediaItem.Builder()
             .setMediaId(song.id)
             .setUri(uri)

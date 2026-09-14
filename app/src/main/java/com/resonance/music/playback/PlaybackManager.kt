@@ -332,7 +332,10 @@ class PlaybackManager @Inject constructor(
     private fun buildMediaItem(song: SongItem): MediaItem? {
         val uri = apiHelper.getStreamUrl(song.id) ?: return null
         val artworkUri = song.coverArt?.let { apiHelper.getCoverArtUrl(it, 600) }
-        val extras = Bundle().apply { song.coverArt?.let { putString(EXTRA_COVER_ART, it) } }
+        val extras = Bundle().apply {
+            song.coverArt?.let { putString(EXTRA_COVER_ART, it) }
+            putBoolean(EXTRA_STARRED, song.starred != null)
+        }
         return MediaItem.Builder()
             .setUri(uri)
             .setMediaId(song.id)
@@ -367,5 +370,6 @@ class PlaybackManager @Inject constructor(
 
     companion object {
         const val EXTRA_COVER_ART = "coverArt"
+        const val EXTRA_STARRED = "starred"
     }
 }

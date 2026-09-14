@@ -5,6 +5,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
+import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -51,6 +52,8 @@ class PlaybackService : MediaLibraryService() {
             .setHandleAudioBecomingNoisy(true)
             .build()
 
+        val sessionCallback = MusicLibrarySessionCallback(musicRepository, serviceScope)
+
         // Skip past unplayable tracks instead of crashing, with a small guard
         // against an infinite skip loop when many tracks fail in a row.
         var consecutiveFailures = 0
@@ -72,13 +75,15 @@ class PlaybackService : MediaLibraryService() {
             override fun onPlaybackStateChanged(playbackState: Int) {
                 if (playbackState == Player.STATE_READY) consecutiveFailures = 0
             }
+
+            // Keeps the car/notification favorite (heart) button in sync with whichever
+            // track is now playing, instead of showing the previous track's state.
+            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                mediaLibrarySession?.let { sessionCallback.onTrackChanged(it, mediaItem) }
+            }
         })
 
-        mediaLibrarySession = MediaLibrarySession.Builder(
-            this,
-            player,
-            MusicLibrarySessionCallback(musicRepository, serviceScope)
-        )
+        mediaLibrarySession = MediaLibrarySession.Builder(this, player, sessionCallback)
             .setSessionActivity(buildContentIntent())
             .build()
     }

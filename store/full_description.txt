@@ -1,0 +1,26 @@
+Resonance Mod Auto est un client Android open source pour les serveurs de musique compatibles Navidrome et Subsonic — écoutez votre propre bibliothèque musicale, sur votre téléphone comme dans votre voiture.
+
+Ce fork ajoute par rapport au projet original :
+🚗 Support complet d'Android Auto — parcourez Artistes, Albums, Playlists et Favoris directement sur l'écran de votre voiture, avec des raccourcis "Tout écouter" et "Lecture aléatoire"
+🇫🇷 Traduction française complète, avec sélecteur de langue dans les réglages
+▶ Boutons de lecture rapide sur les albums, artistes et playlists dans toute l'application
+
+Fonctionnalités héritées du projet original :
+• Diffusion depuis n'importe quel serveur Subsonic ou Navidrome
+• Navigation par artiste, album et genre, recherche dans toute la bibliothèque
+• Contrôles de lecture complets : lecture, pause, avance, recul, aléatoire, répétition
+• File d'attente éditable (lire ensuite, ajouter, réorganiser, supprimer)
+• Lecture en arrière-plan avec notification et contrôles média
+• Mini-lecteur et lecteur plein écran avec gestes
+• Favoris : artistes, albums, titres
+• Pages artiste avec biographie et artistes similaires
+• Paroles synchronisées et texte brut avec défilement automatique
+• Scrobbling vers le serveur
+• Plusieurs thèmes de couleur
+• Aucune publicité, aucun tracking — le seul compte utilisé est le vôtre
+
+Prérequis :
+• Un serveur compatible Subsonic, par exemple Navidrome (navidrome.org)
+• Android 12 ou plus récent
+
+Ce logiciel est un fork sous licence GPLv3 du projet Resonance par AlanHuang99. Code source disponible sur GitHub : github.com/yvesdejoux-cell/resonance-mod-auto
