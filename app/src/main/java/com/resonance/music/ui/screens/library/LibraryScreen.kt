@@ -30,13 +30,14 @@ import com.resonance.music.ui.components.SlimTopBar
 import com.resonance.music.ui.components.SongActions
 import com.resonance.music.ui.components.SongListItem
 
-enum class LibraryTab { Artists, Albums, Genres, Playlists, Favorites }
+enum class LibraryTab { Artists, Albums, Genres, Playlists, Radios, Favorites }
 
 private fun LibraryTab.labelRes(): Int = when (this) {
     LibraryTab.Artists -> R.string.label_artists
     LibraryTab.Albums -> R.string.label_albums
     LibraryTab.Genres -> R.string.label_genres
     LibraryTab.Playlists -> R.string.label_playlists
+    LibraryTab.Radios -> R.string.label_radios
     LibraryTab.Favorites -> R.string.label_favorites
 }
 
@@ -67,6 +68,7 @@ fun LibraryScreen(
             LibraryTab.Albums -> viewModel.loadAlbums()
             LibraryTab.Genres -> viewModel.loadGenres()
             LibraryTab.Playlists -> viewModel.loadPlaylists()
+            LibraryTab.Radios -> viewModel.loadRadios()
             LibraryTab.Favorites -> viewModel.loadFavorites()
         }
     }
@@ -109,6 +111,7 @@ fun LibraryScreen(
                         LibraryTab.Albums -> AlbumsTab(uiState, onAlbumClick, viewModel::setAlbumSort, viewModel::playAlbum)
                         LibraryTab.Genres -> GenresTab(uiState, onGenreClick)
                         LibraryTab.Playlists -> PlaylistsTab(uiState, onPlaylistClick, viewModel::shufflePlayPlaylist)
+                        LibraryTab.Radios -> RadiosTab(uiState, viewModel::playRadioStation)
                         LibraryTab.Favorites -> FavoritesTab(uiState, onAlbumClick, onArtistClick, viewModel)
                     }
                     PullToRefreshContainer(
@@ -265,6 +268,38 @@ private fun PlaylistsTab(
                         }
                     },
                     modifier = Modifier.clickable { onPlaylistClick(playlist.id) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun RadiosTab(
+    uiState: LibraryUiState,
+    onPlayClick: (com.resonance.music.data.api.models.InternetRadioStation) -> Unit
+) {
+    if (uiState.radioStations.isEmpty()) {
+        EmptyState(Icons.Default.Radio, stringResource(R.string.label_radios), stringResource(R.string.library_no_radios_found))
+    } else {
+        LazyColumn(contentPadding = PaddingValues(bottom = 12.dp)) {
+            items(uiState.radioStations, key = { it.id }, contentType = { "radio" }) { station ->
+                ListItem(
+                    headlineContent = {
+                        Text(station.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    },
+                    supportingContent = station.homePageUrl?.let { url ->
+                        { Text(url, maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                    },
+                    leadingContent = {
+                        Icon(Icons.Default.Radio, contentDescription = null)
+                    },
+                    trailingContent = {
+                        IconButton(onClick = { onPlayClick(station) }) {
+                            Icon(Icons.Default.PlayArrow, contentDescription = stringResource(R.string.action_play))
+                        }
+                    },
+                    modifier = Modifier.clickable { onPlayClick(station) }
                 )
             }
         }

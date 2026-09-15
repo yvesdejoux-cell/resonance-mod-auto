@@ -29,6 +29,7 @@
     <string name="label_genres">Genres</string>
     <string name="label_playlists">Playlists</string>
     <string name="label_favorites">Favorites</string>
+    <string name="label_radios">Radios</string>
     <string name="label_songs">Songs</string>
     <string name="label_tracks">Tracks</string>
 
@@ -78,6 +79,7 @@
     <string name="library_no_genres_found">No genres found</string>
     <string name="library_no_playlists_found">No playlists found</string>
     <string name="library_no_favorites_yet">No favorites yet</string>
+    <string name="library_no_radios_found">No radio stations found</string>
     <string name="sort_az">A–Z</string>
     <string name="sort_newest">Recently added</string>
     <string name="sort_recent">Recently played</string>

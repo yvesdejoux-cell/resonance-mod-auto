@@ -12,6 +12,7 @@ import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.resonance.music.data.api.SubsonicApiHelper
+import com.resonance.music.data.api.models.InternetRadioStation
 import com.resonance.music.data.api.models.SongItem
 import com.resonance.music.data.repository.MusicRepository
 import com.resonance.music.data.repository.SettingsStore
@@ -72,6 +73,7 @@ class PlaybackManager @Inject constructor(
     val repeatMode: StateFlow<RepeatMode> = _repeatMode.asStateFlow()
 
     private var pendingPlay: Pair<List<SongItem>, Int>? = null
+    private var pendingRadio: InternetRadioStation? = null
     private var positionJob: Job? = null
 
     @Volatile private var scrobbleEnabled = true
@@ -129,6 +131,13 @@ class PlaybackManager @Inject constructor(
         _shuffleEnabled.value = c.shuffleModeEnabled
         _repeatMode.value = c.repeatMode.toAppRepeatMode()
 
+        val pendingR = pendingRadio
+        if (pendingR != null) {
+            pendingRadio = null
+            startRadioPlayback(c, pendingR)
+            return
+        }
+
         val pending = pendingPlay
         if (pending != null) {
             pendingPlay = null
@@ -154,8 +163,9 @@ class PlaybackManager @Inject constructor(
             isPlaying = c.isPlaying,
             duration = if (c.duration > 0) c.duration else (song?.duration?.toLong() ?: 0L) * 1000
         )
-        // Report "now playing" to the server once per new track.
-        if (song != null && song.id != nowPlayingScrobbleId) {
+        // Report "now playing" to the server once per new track. Radio stations aren't
+        // real library songs, so there's nothing meaningful to scrobble.
+        if (song != null && song.id != nowPlayingScrobbleId && !song.id.startsWith(RADIO_ID_PREFIX)) {
             nowPlayingScrobbleId = song.id
             submittedScrobbleId = null
             scrobble(song.id, submission = false)
@@ -190,6 +200,44 @@ class PlaybackManager @Inject constructor(
         c.play()
         syncNowPlaying()
     }
+
+    /** Internet radio stations stream a fixed URL directly — no Subsonic id-to-stream-URL
+     *  resolution, no queue (skip/shuffle don't apply to a live stream). Kept out of the
+     *  normal [playSongs] path since that assumes every item is a real library song. */
+    fun playRadioStation(station: InternetRadioStation) {
+        initialize()
+        val c = controller
+        if (c != null) {
+            startRadioPlayback(c, station)
+        } else {
+            pendingRadio = station
+            val song = radioAsSongItem(station)
+            _queue.value = listOf(song)
+            _nowPlaying.value = NowPlaying(song = song, isPlaying = false, duration = 0L)
+        }
+    }
+
+    private fun startRadioPlayback(c: MediaController, station: InternetRadioStation) {
+        val song = radioAsSongItem(station)
+        val item = MediaItem.Builder()
+            .setUri(station.streamUrl)
+            .setMediaId(song.id)
+            .setMediaMetadata(
+                MediaMetadata.Builder()
+                    .setTitle(station.name)
+                    .setArtist(RADIO_ARTIST_LABEL)
+                    .build()
+            )
+            .build()
+        _queue.value = listOf(song)
+        c.setMediaItems(listOf(item), 0, 0L)
+        c.prepare()
+        c.play()
+        syncNowPlaying()
+    }
+
+    private fun radioAsSongItem(station: InternetRadioStation): SongItem =
+        SongItem(id = RADIO_ID_PREFIX + station.id, title = station.name, artist = RADIO_ARTIST_LABEL)
 
     /** Build media items and the matching song list together so [_queue] never
      *  drifts from the controller timeline when a stream URL is missing. */
@@ -313,6 +361,7 @@ class PlaybackManager @Inject constructor(
 
     private fun maybeSubmitScrobble() {
         val song = _nowPlaying.value.song ?: return
+        if (song.id.startsWith(RADIO_ID_PREFIX)) return
         val duration = _nowPlaying.value.duration
         if (duration <= 0 || song.id == submittedScrobbleId) return
         // Submit once the track passes its halfway point or four minutes.
@@ -371,5 +420,7 @@ class PlaybackManager @Inject constructor(
     companion object {
         const val EXTRA_COVER_ART = "coverArt"
         const val EXTRA_STARRED = "starred"
+        const val RADIO_ID_PREFIX = "radio:"
+        const val RADIO_ARTIST_LABEL = "Radio en direct"
     }
 }

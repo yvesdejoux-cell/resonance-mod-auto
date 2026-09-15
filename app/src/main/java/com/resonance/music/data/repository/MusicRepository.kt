@@ -195,6 +195,15 @@ class MusicRepository @Inject constructor(
         }
     }
 
+    // --- Internet Radio ---
+
+    suspend fun getRadioStations(): List<InternetRadioStation> {
+        val root = api.getInternetRadioStations()
+        val env = root.response
+        if (!env.isOk) throw SubsonicException(env.error)
+        return env.internetRadioStations?.internetRadioStation ?: emptyList()
+    }
+
     // --- URLs ---
 
     fun getStreamUrl(songId: String): String? = apiHelper.getStreamUrl(songId)

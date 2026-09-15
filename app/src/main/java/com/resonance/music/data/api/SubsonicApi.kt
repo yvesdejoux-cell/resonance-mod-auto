@@ -115,4 +115,9 @@ interface SubsonicApi {
     suspend fun getLyricsBySongId(
         @Query("id") id: String
     ): SubsonicRoot
+
+    // --- Internet Radio ---
+
+    @GET("rest/getInternetRadioStations")
+    suspend fun getInternetRadioStations(): SubsonicRoot
 }

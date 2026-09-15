@@ -50,7 +50,10 @@ data class SubsonicEnvelope(
 
     // Lyrics
     val lyrics: LyricsResult? = null,
-    val lyricsList: LyricsListContainer? = null
+    val lyricsList: LyricsListContainer? = null,
+
+    // Internet radio
+    val internetRadioStations: InternetRadioStationsContainer? = null
 ) {
     val isOk: Boolean get() = status == "ok"
 }
@@ -236,4 +239,17 @@ data class StructuredLyrics(
 data class LyricsLine(
     val start: Long? = null,
     val value: String
+)
+
+// --- Internet Radio ---
+
+data class InternetRadioStationsContainer(
+    val internetRadioStation: List<InternetRadioStation>?
+)
+
+data class InternetRadioStation(
+    val id: String,
+    val name: String,
+    val streamUrl: String,
+    val homePageUrl: String? = null
 )

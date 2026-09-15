@@ -17,6 +17,7 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.resonance.music.R
 import com.resonance.music.data.api.models.AlbumItem
 import com.resonance.music.data.api.models.ArtistItem
+import com.resonance.music.data.api.models.InternetRadioStation
 import com.resonance.music.data.api.models.PlaylistItem
 import com.resonance.music.data.api.models.SongItem
 import com.resonance.music.data.repository.MusicRepository
@@ -27,6 +28,8 @@ private const val ROOT_ID = "root"
 private const val ARTISTS_ID = "artists"
 private const val ALBUMS_ID = "albums"
 private const val PLAYLISTS_ID = "playlists"
+private const val RADIOS_ID = "radios"
+private const val RADIO_PREFIX = "radio/"
 private const val FAVORITES_ID = "favorites"
 private const val FAVORITE_SONGS_ID = "favorite_songs"
 private const val FAVORITE_ALBUMS_ID = "favorite_albums"
@@ -156,6 +159,7 @@ class MusicLibrarySessionCallback(
                     )
                 )
                 parentId == PLAYLISTS_ID -> playlistItems(musicRepository.getPlaylists())
+                parentId == RADIOS_ID -> radioItems(musicRepository.getRadioStations())
                 parentId == FAVORITES_ID -> favoritesChildren()
                 parentId == FAVORITE_SONGS_ID -> {
                     val songs = musicRepository.getStarred().song.orEmpty()
@@ -214,6 +218,11 @@ class MusicLibrarySessionCallback(
                     musicRepository.getPlaylistDetail(mediaId.removePrefix(PLAYLIST_PREFIX))?.let {
                         playlistBrowsableItem(it.id, it.name, it.coverArt)
                     }
+                mediaId == RADIOS_ID -> folderItem(RADIOS_ID, "Radios")
+                mediaId.startsWith(RADIO_PREFIX) ->
+                    musicRepository.getRadioStations()
+                        .firstOrNull { it.id == mediaId.removePrefix(RADIO_PREFIX) }
+                        ?.let { radioPlayableItem(it) }
                 else -> musicRepository.getSong(mediaId)?.let { songPlayableItem(it) }
             }
         } catch (_: Exception) {
@@ -294,6 +303,7 @@ class MusicLibrarySessionCallback(
         folderItem(ARTISTS_ID, "Artistes"),
         folderItem(ALBUMS_ID, "Albums"),
         folderItem(PLAYLISTS_ID, "Playlists"),
+        folderItem(RADIOS_ID, "Radios"),
         folderItem(FAVORITES_ID, "Favoris")
     )
 
@@ -311,6 +321,9 @@ class MusicLibrarySessionCallback(
 
     private fun playlistItems(playlists: List<PlaylistItem>): List<MediaItem> =
         playlists.map { playlistBrowsableItem(it.id, it.name, it.coverArt) }
+
+    private fun radioItems(stations: List<InternetRadioStation>): List<MediaItem> =
+        stations.map { radioPlayableItem(it) }
 
     private fun songItems(songs: List<SongItem>): List<MediaItem> =
         songs.mapNotNull { songPlayableItem(it) }
@@ -425,6 +438,23 @@ class MusicLibrarySessionCallback(
             )
             .build()
     }
+
+    // Internet radio stations already carry a real, directly-playable stream URL — no
+    // Subsonic id-to-stream resolution needed, unlike songPlayableItem.
+    private fun radioPlayableItem(station: InternetRadioStation): MediaItem =
+        MediaItem.Builder()
+            .setMediaId(RADIO_PREFIX + station.id)
+            .setUri(station.streamUrl)
+            .setMediaMetadata(
+                MediaMetadata.Builder()
+                    .setTitle(station.name)
+                    .setArtist("Radio en direct")
+                    .setIsBrowsable(false)
+                    .setIsPlayable(true)
+                    .setMediaType(MediaMetadata.MEDIA_TYPE_RADIO_STATION)
+                    .build()
+            )
+            .build()
 
     private fun artworkUri(coverArtId: String?): Uri? =
         coverArtId?.let { musicRepository.getCoverArtUrl(it, 600) }?.let { Uri.parse(it) }

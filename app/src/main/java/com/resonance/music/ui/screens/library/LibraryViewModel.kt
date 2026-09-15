@@ -27,6 +27,7 @@ data class LibraryUiState(
     val albumSort: AlbumSort = AlbumSort.AZ,
     val genres: List<GenreItem> = emptyList(),
     val playlists: List<PlaylistItem> = emptyList(),
+    val radioStations: List<InternetRadioStation> = emptyList(),
     val starredArtists: List<ArtistItem> = emptyList(),
     val starredAlbums: List<AlbumItem> = emptyList(),
     val starredSongs: List<SongItem> = emptyList(),
@@ -48,6 +49,7 @@ class LibraryViewModel @Inject constructor(
     private var playlistsLoaded = false
     private var favoritesLoaded = false
     private var genresLoaded = false
+    private var radiosLoaded = false
 
     // One stable instance so UiState copies compare equal (a fresh lambda each
     // copy would break equality and force recomposition). 128px suits 48dp rows.
@@ -151,6 +153,22 @@ class LibraryViewModel @Inject constructor(
         }
     }
 
+    fun loadRadios() {
+        if (radiosLoaded) return
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+            try {
+                val stations = musicRepository.getRadioStations()
+                _uiState.value = _uiState.value.copy(isLoading = false, radioStations = stations)
+                radiosLoaded = true
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(isLoading = false, error = e.localizedMessage)
+            }
+        }
+    }
+
+    fun playRadioStation(station: InternetRadioStation) = playbackManager.playRadioStation(station)
+
     fun playStarredSong(song: SongItem) {
         val songs = _uiState.value.starredSongs
         val index = songs.indexOf(song).coerceAtLeast(0)
@@ -228,6 +246,11 @@ class LibraryViewModel @Inject constructor(
                         error = null
                     )
                     favoritesLoaded = true
+                }
+                LibraryTab.Radios -> {
+                    val stations = musicRepository.getRadioStations()
+                    _uiState.value = _uiState.value.copy(radioStations = stations, error = null)
+                    radiosLoaded = true
                 }
             }
         } catch (e: Exception) {

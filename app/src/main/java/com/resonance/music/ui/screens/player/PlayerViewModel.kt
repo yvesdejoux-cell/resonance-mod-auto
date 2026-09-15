@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.resonance.music.data.repository.MusicRepository
 import com.resonance.music.playback.PlaybackManager
+import com.resonance.music.playback.PlaybackManager.Companion.RADIO_ID_PREFIX
 import com.resonance.music.playback.RepeatMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -84,6 +85,7 @@ class PlayerViewModel @Inject constructor(
 
     fun toggleFavorite() {
         val song = playbackManager.nowPlaying.value.song ?: return
+        if (song.id.startsWith(RADIO_ID_PREFIX)) return // radio stations aren't favoritable
         val wasFavorite = _uiState.value.isFavorite
         // Optimistic update, reverted if the request fails
         _uiState.value = _uiState.value.copy(isFavorite = !wasFavorite)
