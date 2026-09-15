@@ -13,11 +13,13 @@ import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
 import com.resonance.music.MainActivity
 import com.resonance.music.data.repository.MusicRepository
+import com.resonance.music.data.repository.SettingsStore
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -34,6 +36,9 @@ class PlaybackService : MediaLibraryService() {
 
     @Inject
     lateinit var musicRepository: MusicRepository
+
+    @Inject
+    lateinit var settingsStore: SettingsStore
 
     private var mediaLibrarySession: MediaLibrarySession? = null
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -52,7 +57,7 @@ class PlaybackService : MediaLibraryService() {
             .setHandleAudioBecomingNoisy(true)
             .build()
 
-        val sessionCallback = MusicLibrarySessionCallback(musicRepository, serviceScope)
+        val sessionCallback = MusicLibrarySessionCallback(musicRepository, settingsStore, serviceScope)
 
         // Skip past unplayable tracks instead of crashing, with a small guard
         // against an infinite skip loop when many tracks fail in a row.
@@ -80,12 +85,31 @@ class PlaybackService : MediaLibraryService() {
             // track is now playing, instead of showing the previous track's state.
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                 mediaLibrarySession?.let { sessionCallback.onTrackChanged(it, mediaItem) }
+                persistQueueState(player)
+            }
+
+            // Checkpoint the position whenever playback pauses (leaving the car, the app
+            // backgrounding, etc.) so a later reconnect with a fresh session — see
+            // MusicLibrarySessionCallback.onPlaybackResumption — restores this exact spot.
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                if (!isPlaying) persistQueueState(player)
             }
         })
 
         mediaLibrarySession = MediaLibrarySession.Builder(this, player, sessionCallback)
             .setSessionActivity(buildContentIntent())
             .build()
+    }
+
+    // Radio streams have no meaningful "resume position" and aren't real library songs,
+    // so they're excluded — a "radio" queue is simply never persisted for resumption.
+    private fun persistQueueState(player: Player) {
+        if (player.mediaItemCount == 0) return
+        val ids = (0 until player.mediaItemCount).map { player.getMediaItemAt(it).mediaId }
+        if (ids.any { it.startsWith("radio") }) return
+        serviceScope.launch {
+            settingsStore.savePlaybackState(ids, player.currentMediaItemIndex, player.currentPosition)
+        }
     }
 
     // Tapping the media notification opens the app.

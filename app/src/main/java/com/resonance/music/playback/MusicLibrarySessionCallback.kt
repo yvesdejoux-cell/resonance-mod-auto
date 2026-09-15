@@ -21,7 +21,11 @@ import com.resonance.music.data.api.models.InternetRadioStation
 import com.resonance.music.data.api.models.PlaylistItem
 import com.resonance.music.data.api.models.SongItem
 import com.resonance.music.data.repository.MusicRepository
+import com.resonance.music.data.repository.SettingsStore
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.guava.future
 
 private const val ROOT_ID = "root"
@@ -46,6 +50,7 @@ private const val SHUFFLE_ARTIST_PREFIX = "shuffle_artist/"
 private const val PLAY_ALBUM_PREFIX = "play_album/"
 private const val SHUFFLE_PLAYLIST_PREFIX = "shuffle_playlist/"
 private const val SHUFFLE_FAVORITE_SONGS_ID = "shuffle_favorite_songs"
+private const val SHUFFLE_ALL_ID = "shuffle_all"
 
 // Custom session command that surfaces as a heart button on the car's Now Playing
 // screen (and the notification), alongside the standard transport controls.
@@ -59,6 +64,7 @@ private const val COMMAND_TOGGLE_FAVORITE = "com.resonance.music.TOGGLE_FAVORITE
  */
 class MusicLibrarySessionCallback(
     private val musicRepository: MusicRepository,
+    private val settingsStore: SettingsStore,
     private val scope: CoroutineScope
 ) : MediaLibrarySession.Callback {
 
@@ -117,6 +123,28 @@ class MusicLibrarySessionCallback(
         refreshFavoriteLayout(session)
     }
 
+    // Called when a new controller connects (Android Auto reconnecting, the system after
+    // a process restart, the notification…) while the session itself has no queue loaded —
+    // e.g. the service was killed after being paused. Restores the last saved queue at the
+    // exact track/position it was left at, per Media3's playback-resumption contract:
+    // https://developer.android.com/media/media3/session/background-playback#resumption
+    override fun onPlaybackResumption(
+        mediaSession: MediaSession,
+        controller: MediaSession.ControllerInfo
+    ): ListenableFuture<MediaSession.MediaItemsWithStartPosition> = scope.future {
+        val state = settingsStore.getPlaybackState()
+            ?: throw UnsupportedOperationException("No saved playback state")
+        val songs = coroutineScope {
+            state.songIds
+                .map { id -> async { runCatching { musicRepository.getSong(id) }.getOrNull() } }
+                .awaitAll()
+        }.filterNotNull()
+        val items = songs.mapNotNull { songPlayableItem(it) }
+        if (items.isEmpty()) throw UnsupportedOperationException("Saved songs are no longer available")
+        val safeIndex = state.index.coerceIn(0, items.size - 1)
+        MediaSession.MediaItemsWithStartPosition(items, safeIndex, state.positionMs)
+    }
+
     private fun refreshFavoriteLayout(session: MediaSession) {
         val layout = listOf(favoriteButton())
         session.connectedControllers.forEach { controller ->
@@ -149,7 +177,7 @@ class MusicLibrarySessionCallback(
     ): ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> = scope.future {
         val children: List<MediaItem>? = try {
             when {
-                parentId == ROOT_ID -> rootChildren()
+                parentId == ROOT_ID -> listOf(shuffleAllItem()) + rootChildren()
                 parentId == ARTISTS_ID -> artistItems(musicRepository.getArtists())
                 parentId == ALBUMS_ID -> albumItems(
                     musicRepository.getAlbumList(
@@ -278,6 +306,8 @@ class MusicLibrarySessionCallback(
                     musicRepository.getStarred().song.orEmpty()
                         .shuffled()
                         .mapNotNull { songPlayableItem(it) }
+                id == SHUFFLE_ALL_ID ->
+                    musicRepository.getRandomSongs(50).mapNotNull { songPlayableItem(it) }
                 id.startsWith(ALBUM_PREFIX) ->
                     musicRepository.getAlbumDetail(id.removePrefix(ALBUM_PREFIX))?.song
                         ?.mapNotNull { songPlayableItem(it) }
@@ -401,6 +431,9 @@ class MusicLibrarySessionCallback(
 
     private fun shuffleFavoriteSongsItem(): MediaItem =
         quickActionItem(SHUFFLE_FAVORITE_SONGS_ID, "🔀 Lecture aléatoire")
+
+    private fun shuffleAllItem(): MediaItem =
+        quickActionItem(SHUFFLE_ALL_ID, "🔀 Tout écouter aléatoirement")
 
     private fun quickActionItem(id: String, title: String): MediaItem =
         MediaItem.Builder()
