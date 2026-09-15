@@ -107,8 +107,12 @@ class PlaybackService : MediaLibraryService() {
         if (player.mediaItemCount == 0) return
         val ids = (0 until player.mediaItemCount).map { player.getMediaItemAt(it).mediaId }
         if (ids.any { it.startsWith("radio") }) return
+        // Read player state here, on the main thread the listener callback runs on — ExoPlayer
+        // forbids touching the player from any other thread, and the coroutine below runs on IO.
+        val index = player.currentMediaItemIndex
+        val position = player.currentPosition
         serviceScope.launch {
-            settingsStore.savePlaybackState(ids, player.currentMediaItemIndex, player.currentPosition)
+            settingsStore.savePlaybackState(ids, index, position)
         }
     }
 
