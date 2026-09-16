@@ -76,6 +76,14 @@ interface SubsonicApi {
     @GET("rest/deletePlaylist")
     suspend fun deletePlaylist(@Query("id") id: String): SubsonicRoot
 
+    @GET("rest/updatePlaylist")
+    suspend fun updatePlaylist(
+        @Query("playlistId") playlistId: String,
+        @Query("name") name: String? = null,
+        @Query("songIdToAdd") songIdsToAdd: List<String>? = null,
+        @Query("songIndexToRemove") songIndexesToRemove: List<Int>? = null
+    ): SubsonicRoot
+
     // --- Annotation ---
 
     @GET("rest/star")

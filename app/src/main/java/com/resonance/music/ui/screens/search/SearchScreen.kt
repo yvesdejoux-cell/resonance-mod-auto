@@ -15,6 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.resonance.music.R
+import com.resonance.music.data.api.models.SongItem
+import com.resonance.music.ui.components.AddToPlaylistDialog
 import com.resonance.music.ui.components.AlbumListItem
 import com.resonance.music.ui.components.SlimTopBar
 import com.resonance.music.ui.components.SongActions
@@ -29,6 +31,15 @@ fun SearchScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val coverArtBuilder = remember<(String) -> String?> { { viewModel.getCoverArtUrl(it) } }
+    var addToPlaylistSong by remember { mutableStateOf<SongItem?>(null) }
+
+    addToPlaylistSong?.let { song ->
+        AddToPlaylistDialog(
+            song = song,
+            onDismiss = { addToPlaylistSong = null },
+            onAdded = { addToPlaylistSong = null }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -152,6 +163,7 @@ fun SearchScreen(
                             actions = SongActions(
                                 onPlayNext = { viewModel.playNext(song) },
                                 onAddToQueue = { viewModel.addToQueue(song) },
+                                onAddToPlaylist = { addToPlaylistSong = song },
                                 onGoToArtist = song.artistId?.let { id -> { onArtistClick(id) } },
                                 onGoToAlbum = song.albumId?.let { id -> { onAlbumClick(id) } }
                             )

@@ -24,6 +24,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.resonance.music.R
+import com.resonance.music.data.api.models.SongItem
+import com.resonance.music.ui.components.AddToPlaylistDialog
 import com.resonance.music.ui.components.MarqueeText
 import kotlinx.coroutines.flow.StateFlow
 
@@ -38,6 +40,15 @@ fun PlayerScreen(
     viewModel: PlayerViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var addToPlaylistSong by remember { mutableStateOf<SongItem?>(null) }
+
+    addToPlaylistSong?.let { song ->
+        AddToPlaylistDialog(
+            song = song,
+            onDismiss = { addToPlaylistSong = null },
+            onAdded = { addToPlaylistSong = null }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -46,6 +57,11 @@ fun PlayerScreen(
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(Icons.Default.KeyboardArrowDown, contentDescription = stringResource(R.string.content_desc_back))
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { addToPlaylistSong = viewModel.currentSong() }) {
+                        Icon(Icons.Default.PlaylistAdd, contentDescription = stringResource(R.string.action_add_to_playlist))
                     }
                 }
             )

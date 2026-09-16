@@ -167,6 +167,19 @@ class LibraryViewModel @Inject constructor(
         }
     }
 
+    fun createPlaylist(name: String) {
+        if (name.isBlank()) return
+        viewModelScope.launch {
+            try {
+                musicRepository.createPlaylist(name)
+                val playlists = musicRepository.getPlaylists()
+                _uiState.value = _uiState.value.copy(playlists = playlists, coverArtUrlBuilder = coverArtBuilder)
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(error = e.localizedMessage)
+            }
+        }
+    }
+
     fun playRadioStation(station: InternetRadioStation) = playbackManager.playRadioStation(station)
 
     fun playStarredSong(song: SongItem) {

@@ -2,6 +2,7 @@ package com.resonance.music.ui.screens.player
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.resonance.music.data.api.models.SongItem
 import com.resonance.music.data.repository.MusicRepository
 import com.resonance.music.playback.PlaybackManager
 import com.resonance.music.playback.PlaybackManager.Companion.RADIO_ID_PREFIX
@@ -69,6 +70,10 @@ class PlayerViewModel @Inject constructor(
             }
         }
     }
+
+    // Radio "songs" have no Subsonic id, so they can't be added to a real playlist.
+    fun currentSong(): SongItem? =
+        playbackManager.nowPlaying.value.song?.takeUnless { it.id.startsWith(RADIO_ID_PREFIX) }
 
     fun togglePlayPause() = playbackManager.togglePlayPause()
     fun next() = playbackManager.next()

@@ -74,6 +74,20 @@ fun SongListItem(
                             leadingIcon = { Icon(Icons.Default.PlaylistAdd, contentDescription = null) }
                         )
                     }
+                    actions.onAddToPlaylist?.let { action ->
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.action_add_to_playlist)) },
+                            onClick = { showMenu = false; action() },
+                            leadingIcon = { Icon(Icons.Default.LibraryAdd, contentDescription = null) }
+                        )
+                    }
+                    actions.onRemoveFromPlaylist?.let { action ->
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.action_remove_from_playlist)) },
+                            onClick = { showMenu = false; action() },
+                            leadingIcon = { Icon(Icons.Default.PlaylistRemove, contentDescription = null) }
+                        )
+                    }
                     actions.onGoToAlbum?.let { action ->
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.action_go_to_album)) },

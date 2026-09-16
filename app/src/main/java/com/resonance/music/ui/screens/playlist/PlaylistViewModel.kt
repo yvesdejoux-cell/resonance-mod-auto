@@ -19,7 +19,9 @@ data class PlaylistUiState(
     val songCount: Int? = null,
     val coverArtUrl: String? = null,
     val songs: List<SongItem> = emptyList(),
-    val error: String? = null
+    val error: String? = null,
+    val actionError: String? = null,
+    val deleted: Boolean = false
 )
 
 @HiltViewModel
@@ -31,7 +33,10 @@ class PlaylistViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(PlaylistUiState())
     val uiState: StateFlow<PlaylistUiState> = _uiState.asStateFlow()
 
+    private var playlistId: String? = null
+
     fun loadPlaylist(playlistId: String) {
+        this.playlistId = playlistId
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
             try {
@@ -51,6 +56,52 @@ class PlaylistViewModel @Inject constructor(
                 _uiState.value = _uiState.value.copy(isLoading = false, error = e.localizedMessage ?: "Failed to load")
             }
         }
+    }
+
+    fun rename(name: String) {
+        val id = playlistId ?: return
+        if (name.isBlank() || name == _uiState.value.name) return
+        viewModelScope.launch {
+            try {
+                musicRepository.renamePlaylist(id, name)
+                _uiState.value = _uiState.value.copy(name = name)
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(actionError = e.localizedMessage)
+            }
+        }
+    }
+
+    fun delete() {
+        val id = playlistId ?: return
+        viewModelScope.launch {
+            try {
+                musicRepository.deletePlaylist(id)
+                _uiState.value = _uiState.value.copy(deleted = true)
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(actionError = e.localizedMessage)
+            }
+        }
+    }
+
+    fun removeSongAt(index: Int) {
+        val id = playlistId ?: return
+        val songs = _uiState.value.songs
+        if (index !in songs.indices) return
+        viewModelScope.launch {
+            try {
+                musicRepository.removeSongFromPlaylist(id, index)
+                _uiState.value = _uiState.value.copy(
+                    songs = songs.filterIndexed { i, _ -> i != index },
+                    songCount = (_uiState.value.songCount ?: songs.size) - 1
+                )
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(actionError = e.localizedMessage)
+            }
+        }
+    }
+
+    fun clearActionError() {
+        _uiState.value = _uiState.value.copy(actionError = null)
     }
 
     fun playAll(shuffle: Boolean) {

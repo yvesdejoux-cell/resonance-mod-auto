@@ -126,6 +126,23 @@ class MusicRepository @Inject constructor(
         if (!root.response.isOk) throw SubsonicException(root.response.error)
     }
 
+    suspend fun renamePlaylist(id: String, name: String) {
+        val root = api.updatePlaylist(playlistId = id, name = name)
+        if (!root.response.isOk) throw SubsonicException(root.response.error)
+    }
+
+    suspend fun addSongToPlaylist(playlistId: String, songId: String) {
+        val root = api.updatePlaylist(playlistId = playlistId, songIdsToAdd = listOf(songId))
+        if (!root.response.isOk) throw SubsonicException(root.response.error)
+    }
+
+    // songIndex is the song's 0-based position in the playlist, as required by Subsonic's
+    // updatePlaylist — not the song id, since a playlist can contain the same song twice.
+    suspend fun removeSongFromPlaylist(playlistId: String, songIndex: Int) {
+        val root = api.updatePlaylist(playlistId = playlistId, songIndexesToRemove = listOf(songIndex))
+        if (!root.response.isOk) throw SubsonicException(root.response.error)
+    }
+
     // --- Favorites ---
 
     suspend fun star(id: String) {

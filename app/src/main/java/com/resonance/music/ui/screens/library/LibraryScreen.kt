@@ -24,8 +24,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.resonance.music.R
+import com.resonance.music.data.api.models.SongItem
+import com.resonance.music.ui.components.AddToPlaylistDialog
 import com.resonance.music.ui.components.AlbumCard
 import com.resonance.music.ui.components.AlbumListItem
+import com.resonance.music.ui.components.PlaylistNameDialog
 import com.resonance.music.ui.components.SlimTopBar
 import com.resonance.music.ui.components.SongActions
 import com.resonance.music.ui.components.SongListItem
@@ -60,6 +63,8 @@ fun LibraryScreen(
 ) {
     var selectedTab by remember { mutableStateOf(LibraryTab.Artists) }
     val uiState by viewModel.uiState.collectAsState()
+    var showCreatePlaylistDialog by remember { mutableStateOf(false) }
+    var addToPlaylistSong by remember { mutableStateOf<SongItem?>(null) }
 
     // Load data when tab changes
     LaunchedEffect(selectedTab) {
@@ -81,9 +86,36 @@ fun LibraryScreen(
         }
     }
 
+    if (showCreatePlaylistDialog) {
+        PlaylistNameDialog(
+            title = stringResource(R.string.action_new_playlist),
+            confirmLabel = stringResource(R.string.action_create),
+            onConfirm = { name ->
+                showCreatePlaylistDialog = false
+                viewModel.createPlaylist(name)
+            },
+            onDismiss = { showCreatePlaylistDialog = false }
+        )
+    }
+
+    addToPlaylistSong?.let { song ->
+        AddToPlaylistDialog(
+            song = song,
+            onDismiss = { addToPlaylistSong = null },
+            onAdded = { addToPlaylistSong = null }
+        )
+    }
+
     Scaffold(
         topBar = {
             SlimTopBar(stringResource(R.string.library_title))
+        },
+        floatingActionButton = {
+            if (selectedTab == LibraryTab.Playlists) {
+                FloatingActionButton(onClick = { showCreatePlaylistDialog = true }) {
+                    Icon(Icons.Default.Add, contentDescription = stringResource(R.string.action_new_playlist))
+                }
+            }
         }
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding)) {
@@ -112,7 +144,7 @@ fun LibraryScreen(
                         LibraryTab.Genres -> GenresTab(uiState, onGenreClick)
                         LibraryTab.Playlists -> PlaylistsTab(uiState, onPlaylistClick, viewModel::shufflePlayPlaylist)
                         LibraryTab.Radios -> RadiosTab(uiState, viewModel::playRadioStation)
-                        LibraryTab.Favorites -> FavoritesTab(uiState, onAlbumClick, onArtistClick, viewModel)
+                        LibraryTab.Favorites -> FavoritesTab(uiState, onAlbumClick, onArtistClick, viewModel) { addToPlaylistSong = it }
                     }
                     PullToRefreshContainer(
                         state = pullState,
@@ -311,7 +343,8 @@ private fun FavoritesTab(
     uiState: LibraryUiState,
     onAlbumClick: (String) -> Unit,
     onArtistClick: (String) -> Unit,
-    viewModel: LibraryViewModel
+    viewModel: LibraryViewModel,
+    onAddToPlaylistClick: (SongItem) -> Unit
 ) {
     val hasContent = uiState.starredArtists.isNotEmpty() ||
             uiState.starredAlbums.isNotEmpty() ||
@@ -376,6 +409,7 @@ private fun FavoritesTab(
                         actions = SongActions(
                             onPlayNext = { viewModel.playNext(song) },
                             onAddToQueue = { viewModel.addToQueue(song) },
+                            onAddToPlaylist = { onAddToPlaylistClick(song) },
                             onGoToArtist = song.artistId?.let { id -> { onArtistClick(id) } },
                             onGoToAlbum = song.albumId?.let { id -> { onAlbumClick(id) } }
                         )

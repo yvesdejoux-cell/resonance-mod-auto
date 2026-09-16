@@ -33,7 +33,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.resonance.music.R
 import com.resonance.music.data.api.models.ArtistItem
+import com.resonance.music.data.api.models.SongItem
 import com.resonance.music.playback.RepeatMode
+import com.resonance.music.ui.components.AddToPlaylistDialog
 import com.resonance.music.ui.components.AlbumListItem
 import com.resonance.music.ui.components.SongActions
 import com.resonance.music.ui.components.SongListItem
@@ -50,9 +52,18 @@ fun ArtistScreen(
     val uiState by viewModel.uiState.collectAsState()
     val repeatMode by viewModel.repeatMode.collectAsState()
     var selectedTab by rememberSaveable { mutableStateOf(0) } // 0 = Albums, 1 = Tracks
+    var addToPlaylistSong by remember { mutableStateOf<SongItem?>(null) }
 
     LaunchedEffect(artistId) {
         viewModel.loadArtist(artistId)
+    }
+
+    addToPlaylistSong?.let { song ->
+        AddToPlaylistDialog(
+            song = song,
+            onDismiss = { addToPlaylistSong = null },
+            onAdded = { addToPlaylistSong = null }
+        )
     }
 
     Scaffold(
@@ -221,6 +232,7 @@ fun ArtistScreen(
                             actions = SongActions(
                                 onPlayNext = { viewModel.playNext(song) },
                                 onAddToQueue = { viewModel.addToQueue(song) },
+                                onAddToPlaylist = { addToPlaylistSong = song },
                                 onGoToAlbum = song.albumId?.let { id -> { onAlbumClick(id) } }
                             )
                         )

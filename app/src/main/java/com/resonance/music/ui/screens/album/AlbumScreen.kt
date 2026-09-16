@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.resonance.music.R
+import com.resonance.music.data.api.models.SongItem
+import com.resonance.music.ui.components.AddToPlaylistDialog
 import com.resonance.music.ui.components.SongActions
 import com.resonance.music.ui.components.SongListItem
 
@@ -34,9 +36,18 @@ fun AlbumScreen(
     viewModel: AlbumViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var addToPlaylistSong by remember { mutableStateOf<SongItem?>(null) }
 
     LaunchedEffect(albumId) {
         viewModel.loadAlbum(albumId)
+    }
+
+    addToPlaylistSong?.let { song ->
+        AddToPlaylistDialog(
+            song = song,
+            onDismiss = { addToPlaylistSong = null },
+            onAdded = { addToPlaylistSong = null }
+        )
     }
 
     Scaffold(
@@ -189,6 +200,7 @@ fun AlbumScreen(
                             actions = SongActions(
                                 onPlayNext = { viewModel.playNext(song) },
                                 onAddToQueue = { viewModel.addToQueue(song) },
+                                onAddToPlaylist = { addToPlaylistSong = song },
                                 onGoToArtist = song.artistId?.let { id -> { onArtistClick(id) } },
                                 onGoToAlbum = song.albumId?.let { id -> onAlbumClick?.let { nav -> { nav(id) } } }
                             )

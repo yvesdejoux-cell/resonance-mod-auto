@@ -8,6 +8,8 @@ package com.resonance.music.ui.components
 data class SongActions(
     val onPlayNext: (() -> Unit)? = null,
     val onAddToQueue: (() -> Unit)? = null,
+    val onAddToPlaylist: (() -> Unit)? = null,
+    val onRemoveFromPlaylist: (() -> Unit)? = null,
     val onGoToAlbum: (() -> Unit)? = null,
     val onGoToArtist: (() -> Unit)? = null
 )

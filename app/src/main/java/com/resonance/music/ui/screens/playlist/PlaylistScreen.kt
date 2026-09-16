@@ -22,6 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.resonance.music.R
+import com.resonance.music.data.api.models.SongItem
+import com.resonance.music.ui.components.AddToPlaylistDialog
+import com.resonance.music.ui.components.PlaylistNameDialog
 import com.resonance.music.ui.components.SongActions
 import com.resonance.music.ui.components.SongListItem
 
@@ -35,9 +38,64 @@ fun PlaylistScreen(
     viewModel: PlaylistViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var showRenameDialog by remember { mutableStateOf(false) }
+    var showDeleteConfirm by remember { mutableStateOf(false) }
+    var addToPlaylistSong by remember { mutableStateOf<SongItem?>(null) }
 
     LaunchedEffect(playlistId) {
         viewModel.loadPlaylist(playlistId)
+    }
+
+    LaunchedEffect(uiState.deleted) {
+        if (uiState.deleted) onBackClick()
+    }
+
+    if (showRenameDialog) {
+        PlaylistNameDialog(
+            title = stringResource(R.string.action_rename_playlist),
+            confirmLabel = stringResource(R.string.action_save),
+            initialName = uiState.name,
+            onConfirm = { name ->
+                showRenameDialog = false
+                viewModel.rename(name)
+            },
+            onDismiss = { showRenameDialog = false }
+        )
+    }
+
+    if (showDeleteConfirm) {
+        AlertDialog(
+            onDismissRequest = { showDeleteConfirm = false },
+            title = { Text(stringResource(R.string.action_delete_playlist)) },
+            text = { Text(stringResource(R.string.playlist_delete_confirm_message, uiState.name)) },
+            confirmButton = {
+                TextButton(onClick = { showDeleteConfirm = false; viewModel.delete() }) {
+                    Text(stringResource(R.string.action_delete_playlist))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteConfirm = false }) { Text(stringResource(R.string.action_cancel)) }
+            }
+        )
+    }
+
+    uiState.actionError?.let { message ->
+        AlertDialog(
+            onDismissRequest = viewModel::clearActionError,
+            title = { Text(stringResource(R.string.error_generic)) },
+            text = { Text(message) },
+            confirmButton = {
+                TextButton(onClick = viewModel::clearActionError) { Text(stringResource(R.string.action_ok)) }
+            }
+        )
+    }
+
+    addToPlaylistSong?.let { song ->
+        AddToPlaylistDialog(
+            song = song,
+            onDismiss = { addToPlaylistSong = null },
+            onAdded = { addToPlaylistSong = null }
+        )
     }
 
     Scaffold(
@@ -71,6 +129,16 @@ fun PlaylistScreen(
                                 text = { Text(stringResource(R.string.action_add_to_queue)) },
                                 onClick = { showPlaylistMenu = false; viewModel.addAllToQueue() },
                                 leadingIcon = { Icon(Icons.Default.PlaylistAdd, contentDescription = null) }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.action_rename_playlist)) },
+                                onClick = { showPlaylistMenu = false; showRenameDialog = true },
+                                leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null) }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.action_delete_playlist)) },
+                                onClick = { showPlaylistMenu = false; showDeleteConfirm = true },
+                                leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null) }
                             )
                         }
                     }
@@ -185,6 +253,8 @@ fun PlaylistScreen(
                         actions = SongActions(
                             onPlayNext = { viewModel.playNext(song) },
                             onAddToQueue = { viewModel.addToQueue(song) },
+                            onAddToPlaylist = { addToPlaylistSong = song },
+                            onRemoveFromPlaylist = { viewModel.removeSongAt(index) },
                             onGoToArtist = song.artistId?.let { id -> { onArtistClick(id) } },
                             onGoToAlbum = song.albumId?.let { id -> { onAlbumClick(id) } }
                         )

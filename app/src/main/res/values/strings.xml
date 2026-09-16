@@ -19,9 +19,21 @@
     <string name="action_retry">Retry</string>
     <string name="action_see_all">See all</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_ok">OK</string>
+    <string name="action_save">Save</string>
+    <string name="action_create">Create</string>
     <string name="content_desc_album_art">Album art</string>
     <string name="error_generic">Error</string>
     <string name="error_unknown">Unknown error</string>
+
+    <!-- Playlists -->
+    <string name="action_add_to_playlist">Add to playlist</string>
+    <string name="action_remove_from_playlist">Remove from playlist</string>
+    <string name="action_new_playlist">New playlist</string>
+    <string name="action_rename_playlist">Rename playlist</string>
+    <string name="action_delete_playlist">Delete playlist</string>
+    <string name="playlist_name_label">Playlist name</string>
+    <string name="playlist_delete_confirm_message">Delete \"%1$s\"? This cannot be undone.</string>
 
     <!-- Shared section / tab labels -->
     <string name="label_artists">Artists</string>
