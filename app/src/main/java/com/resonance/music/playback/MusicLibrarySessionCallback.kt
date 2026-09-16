@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.CommandButton
 import androidx.media3.session.LibraryResult
 import androidx.media3.session.MediaLibraryService.LibraryParams
@@ -128,6 +129,7 @@ class MusicLibrarySessionCallback(
     // e.g. the service was killed after being paused. Restores the last saved queue at the
     // exact track/position it was left at, per Media3's playback-resumption contract:
     // https://developer.android.com/media/media3/session/background-playback#resumption
+    @UnstableApi
     override fun onPlaybackResumption(
         mediaSession: MediaSession,
         controller: MediaSession.ControllerInfo
@@ -216,7 +218,7 @@ class MusicLibrarySessionCallback(
             null
         }
         if (children == null) {
-            LibraryResult.ofError<ImmutableList<MediaItem>>(SessionResult.RESULT_ERROR_BAD_VALUE)
+            LibraryResult.ofError<ImmutableList<MediaItem>>(LibraryResult.RESULT_ERROR_BAD_VALUE)
         } else {
             LibraryResult.ofItemList(ImmutableList.copyOf(children), params)
         }
@@ -256,7 +258,7 @@ class MusicLibrarySessionCallback(
         } catch (_: Exception) {
             null
         }
-        if (item == null) LibraryResult.ofError<MediaItem>(SessionResult.RESULT_ERROR_BAD_VALUE) else LibraryResult.ofItem(item, null)
+        if (item == null) LibraryResult.ofError<MediaItem>(LibraryResult.RESULT_ERROR_BAD_VALUE) else LibraryResult.ofItem(item, null)
     }
 
     // Legacy MediaBrowserCompat clients (Android Auto, Bluetooth, Assistant) drive playback
@@ -274,6 +276,7 @@ class MusicLibrarySessionCallback(
         mediaItems.flatMap { resolvePlayableItems(it) }
     }
 
+    @UnstableApi
     override fun onSetMediaItems(
         session: MediaSession,
         controller: MediaSession.ControllerInfo,
