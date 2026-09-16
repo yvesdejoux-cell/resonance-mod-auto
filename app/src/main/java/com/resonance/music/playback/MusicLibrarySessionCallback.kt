@@ -451,6 +451,14 @@ class MusicLibrarySessionCallback(
             )
             .build()
 
+    // Combines artist and album onto the single subtitle line Android Auto's Now Playing
+    // card actually renders (a separate "description" line isn't shown on every head unit).
+    private fun nowPlayingSubtitle(artist: String?, album: String?): String? = when {
+        !artist.isNullOrBlank() && !album.isNullOrBlank() -> "$artist • $album"
+        !artist.isNullOrBlank() -> artist
+        else -> album
+    }
+
     private fun songPlayableItem(song: SongItem): MediaItem? {
         val uri = musicRepository.getStreamUrl(song.id) ?: return null
         val extras = Bundle().apply {
@@ -465,6 +473,11 @@ class MusicLibrarySessionCallback(
                     .setTitle(song.title)
                     .setArtist(song.artist)
                     .setAlbumTitle(song.album)
+                    // Android Auto's Now Playing card renders title + a single subtitle line —
+                    // the separate "description" field isn't shown on every head unit, so
+                    // artist and album are combined into that one subtitle line instead.
+                    .setDisplayTitle(song.title)
+                    .setSubtitle(nowPlayingSubtitle(song.artist, song.album))
                     .setArtworkUri(artworkUri(song.coverArt))
                     .setExtras(extras)
                     .setIsBrowsable(false)

@@ -378,6 +378,14 @@ class PlaybackManager @Inject constructor(
         }
     }
 
+    // Combines artist and album onto the single subtitle line Android Auto's Now Playing
+    // card actually renders (a separate "description" line isn't shown on every head unit).
+    private fun nowPlayingSubtitle(artist: String?, album: String?): String? = when {
+        !artist.isNullOrBlank() && !album.isNullOrBlank() -> "$artist • $album"
+        !artist.isNullOrBlank() -> artist
+        else -> album
+    }
+
     private fun buildMediaItem(song: SongItem): MediaItem? {
         val uri = apiHelper.getStreamUrl(song.id) ?: return null
         val artworkUri = song.coverArt?.let { apiHelper.getCoverArtUrl(it, 600) }
@@ -393,6 +401,11 @@ class PlaybackManager @Inject constructor(
                     .setTitle(song.title)
                     .setArtist(song.artist)
                     .setAlbumTitle(song.album)
+                    // Same subtitle strategy as MusicLibrarySessionCallback.songPlayableItem() —
+                    // combine artist + album onto the one line Android Auto's Now Playing card
+                    // actually renders (a separate "description" line isn't shown everywhere).
+                    .setDisplayTitle(song.title)
+                    .setSubtitle(nowPlayingSubtitle(song.artist, song.album))
                     .setArtworkUri(artworkUri?.let { Uri.parse(it) })
                     .setExtras(extras)
                     .build()
