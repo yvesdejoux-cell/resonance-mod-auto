@@ -145,28 +145,22 @@ class MusicRepository @Inject constructor(
 
     // --- Favorites ---
 
-    suspend fun star(id: String) {
-        api.star(id = id)
-    }
+    suspend fun star(id: String) = checkOk(api.star(id = id))
 
-    suspend fun unstar(id: String) {
-        api.unstar(id = id)
-    }
+    suspend fun unstar(id: String) = checkOk(api.unstar(id = id))
 
-    suspend fun starAlbum(albumId: String) {
-        api.star(albumId = albumId)
-    }
+    suspend fun starAlbum(albumId: String) = checkOk(api.star(albumId = albumId))
 
-    suspend fun unstarAlbum(albumId: String) {
-        api.unstar(albumId = albumId)
-    }
+    suspend fun unstarAlbum(albumId: String) = checkOk(api.unstar(albumId = albumId))
 
-    suspend fun starArtist(artistId: String) {
-        api.star(artistId = artistId)
-    }
+    suspend fun starArtist(artistId: String) = checkOk(api.star(artistId = artistId))
 
-    suspend fun unstarArtist(artistId: String) {
-        api.unstar(artistId = artistId)
+    suspend fun unstarArtist(artistId: String) = checkOk(api.unstar(artistId = artistId))
+
+    // A Subsonic failure comes back as HTTP 200 with status "failed", so it must be checked
+    // explicitly or a rejected favorite change looks like a success.
+    private fun checkOk(root: SubsonicRoot) {
+        if (!root.response.isOk) throw SubsonicException(root.response.error)
     }
 
     suspend fun getStarred(): StarredResult {

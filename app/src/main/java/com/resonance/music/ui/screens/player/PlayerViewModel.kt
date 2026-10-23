@@ -93,12 +93,14 @@ class PlayerViewModel @Inject constructor(
         if (song.id.startsWith(RADIO_ID_PREFIX)) return // radio stations aren't favoritable
         val wasFavorite = _uiState.value.isFavorite
         // Optimistic update, reverted if the request fails
+        playbackManager.updateSongStarred(song.id, !wasFavorite)
         _uiState.value = _uiState.value.copy(isFavorite = !wasFavorite)
         viewModelScope.launch {
             val result = runCatching {
                 if (wasFavorite) musicRepository.unstar(song.id) else musicRepository.star(song.id)
             }
             if (result.isFailure) {
+                playbackManager.updateSongStarred(song.id, wasFavorite)
                 _uiState.value = _uiState.value.copy(isFavorite = wasFavorite)
             }
         }

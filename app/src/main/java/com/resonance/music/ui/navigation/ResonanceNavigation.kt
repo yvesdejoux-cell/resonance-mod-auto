@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -71,6 +72,15 @@ fun ResonanceNavHost(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    // The bottom-bar tab whose stack we are in, even when a detail screen (an artist or
+    // album opened from Search, say) is on top and no tab root is the current destination.
+    var activeTab by rememberSaveable { mutableStateOf(Routes.HOME) }
+    LaunchedEffect(currentRoute) {
+        if (currentRoute in listOf(Routes.HOME, Routes.SEARCH, Routes.LIBRARY, Routes.SETTINGS)) {
+            activeTab = currentRoute!!
+        }
+    }
+
     val onFullScreen = currentRoute == null ||
             currentRoute in listOf(Routes.PLAYER, Routes.LYRICS, Routes.QUEUE, Routes.LOGIN)
     val showBottomBar = !onFullScreen
@@ -87,11 +97,19 @@ fun ResonanceNavHost(
     val startDestination = if (loggedIn) Routes.HOME else Routes.LOGIN
 
     // Standard bottom-nav tab switch: one back-stack entry per tab, with state saved/restored.
+    // Tapping the tab we're already in while deeper in its stack goes back to that tab's root;
+    // otherwise restoreState would just bring the same detail screen back and the tap would
+    // look like it did nothing.
     val onTabSelected: (String) -> Unit = { route ->
-        navController.navigate(route) {
-            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-            launchSingleTop = true
-            restoreState = true
+        val returnedToRoot = route == activeTab && currentRoute != route &&
+            navController.popBackStack(route, inclusive = false)
+        if (!returnedToRoot) {
+            activeTab = route
+            navController.navigate(route) {
+                popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                launchSingleTop = true
+                restoreState = true
+            }
         }
     }
 

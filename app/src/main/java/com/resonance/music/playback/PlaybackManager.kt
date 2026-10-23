@@ -304,6 +304,17 @@ class PlaybackManager @Inject constructor(
         syncNowPlaying()
     }
 
+    /** Keeps the cached copy of a song in sync after its favorite status changes, so the
+     *  player heart doesn't snap back to the stale value on the next playback-state update. */
+    fun updateSongStarred(songId: String, starred: Boolean) {
+        val marker = if (starred) java.time.Instant.now().toString() else null
+        _queue.update { queue -> queue.map { if (it.id == songId) it.copy(starred = marker) else it } }
+        _nowPlaying.update { np ->
+            val song = np.song
+            if (song != null && song.id == songId) np.copy(song = song.copy(starred = marker)) else np
+        }
+    }
+
     fun togglePlayPause() {
         val c = controller ?: return
         if (c.isPlaying) c.pause() else c.play()

@@ -116,7 +116,12 @@ class LibraryViewModel @Inject constructor(
     }
 
     fun loadPlaylists() {
-        if (playlistsLoaded) return
+        // Already loaded: refresh quietly in the background (no spinner) so playlists created
+        // or edited elsewhere in the app show up when the tab is reopened.
+        if (playlistsLoaded) {
+            viewModelScope.launch { refresh(LibraryTab.Playlists) }
+            return
+        }
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
@@ -134,7 +139,11 @@ class LibraryViewModel @Inject constructor(
     }
 
     fun loadFavorites() {
-        if (favoritesLoaded) return
+        // Same quiet refresh: songs favorited from the player must appear without a manual pull.
+        if (favoritesLoaded) {
+            viewModelScope.launch { refresh(LibraryTab.Favorites) }
+            return
+        }
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
