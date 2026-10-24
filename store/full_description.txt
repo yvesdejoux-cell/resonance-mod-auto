@@ -1,8 +1,11 @@
 ResonAuto est un client Android open source pour les serveurs de musique compatibles Navidrome et Subsonic — écoutez votre propre bibliothèque musicale, sur votre téléphone comme dans votre voiture.
 
 Ce fork ajoute par rapport au projet original :
-🚗 Support complet d'Android Auto — parcourez Artistes, Albums, Playlists et Favoris directement sur l'écran de votre voiture, avec des raccourcis "Tout écouter" et "Lecture aléatoire"
-🇫🇷 Traduction française complète, avec sélecteur de langue dans les réglages
+🚗 Support complet d'Android Auto — parcourez Artistes, Albums, Playlists, Radios et Favoris directement sur l'écran de votre voiture, avec des raccourcis "Tout écouter" et "Lecture aléatoire", un bouton cœur pour ajouter aux favoris, et la reprise de la lecture là où vous l'aviez laissée
+🎶 Gestion des playlists — créez, renommez et supprimez vos playlists, ajoutez ou retirez des titres depuis n'importe quel écran, y compris le lecteur
+📻 Radios Internet de votre serveur Navidrome
+🌍 7 langues : français, anglais, allemand, espagnol, italien, portugais et néerlandais, avec sélecteur de langue dans les réglages
+🎧 Lecture de nombreux formats audio : ceux que le téléphone ne lit pas (WMA, APE, WavPack, DSD, AIFF…) sont convertis par votre serveur Navidrome
 ▶ Boutons de lecture rapide sur les albums, artistes et playlists dans toute l'application
 
 Fonctionnalités héritées du projet original :
@@ -22,5 +25,6 @@ Fonctionnalités héritées du projet original :
 Prérequis :
 • Un serveur compatible Subsonic, par exemple Navidrome (navidrome.org)
 • Android 12 ou plus récent
+• Pour lire les formats non natifs, un serveur Navidrome avec ffmpeg (inclus dans l'image Docker officielle)
 
 Ce logiciel est un fork sous licence GPLv3 du projet Resonance par AlanHuang99. Code source disponible sur GitHub : github.com/yvesdejoux-cell/resonance-mod-auto
