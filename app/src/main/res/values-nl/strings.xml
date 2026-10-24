@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ResonAuto</string>
+
+    <!-- Common -->
+    <string name="content_desc_back">Terug</string>
+    <string name="action_play">Afspelen</string>
+    <string name="action_pause">Pauzeren</string>
+    <string name="action_shuffle">Willekeurig</string>
+    <string name="action_next">Volgende</string>
+    <string name="action_previous">Vorige</string>
+    <string name="action_repeat">Herhalen</string>
+    <string name="action_loop">Lus</string>
+    <string name="action_play_next">Hierna afspelen</string>
+    <string name="action_add_to_queue">Toevoegen aan wachtrij</string>
+    <string name="action_go_to_album">Ga naar album</string>
+    <string name="action_go_to_artist">Ga naar artiest</string>
+    <string name="content_desc_more_options">Meer opties</string>
+    <string name="action_retry">Opnieuw proberen</string>
+    <string name="action_see_all">Alles weergeven</string>
+    <string name="action_cancel">Annuleren</string>
+    <string name="action_ok">OK</string>
+    <string name="action_save">Opslaan</string>
+    <string name="action_create">Aanmaken</string>
+    <string name="content_desc_album_art">Albumhoes</string>
+    <string name="error_generic">Fout</string>
+    <string name="error_unknown">Onbekende fout</string>
+
+    <!-- Playlists -->
+    <string name="action_add_to_playlist">Toevoegen aan afspeellijst</string>
+    <string name="action_remove_from_playlist">Verwijderen uit afspeellijst</string>
+    <string name="action_new_playlist">Nieuwe afspeellijst</string>
+    <string name="action_rename_playlist">Afspeellijst hernoemen</string>
+    <string name="action_delete_playlist">Afspeellijst verwijderen</string>
+    <string name="playlist_name_label">Naam van afspeellijst</string>
+    <string name="playlist_delete_confirm_message">\"%1$s\" verwijderen? Dit kan niet ongedaan worden gemaakt.</string>
+
+    <!-- Shared section / tab labels -->
+    <string name="label_artists">Artiesten</string>
+    <string name="label_albums">Albums</string>
+    <string name="label_genres">Genres</string>
+    <string name="label_playlists">Afspeellijsten</string>
+    <string name="label_favorites">Favorieten</string>
+    <string name="label_radios">Radio\'s</string>
+    <string name="label_songs">Nummers</string>
+    <string name="label_tracks">Tracks</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_search">Zoeken</string>
+    <string name="nav_library">Bibliotheek</string>
+    <string name="nav_settings">Instellingen</string>
+
+    <!-- Settings screen -->
+    <string name="settings_title">Instellingen</string>
+    <string name="settings_logout">Uitloggen</string>
+    <string name="settings_logout_confirm_message">Hiermee verbreek je de verbinding met de server en worden je inloggegevens gewist.</string>
+    <string name="settings_section_theme">Thema</string>
+    <string name="settings_section_server">Server</string>
+    <string name="settings_server_label">Server</string>
+    <string name="settings_not_connected">Niet verbonden</string>
+    <string name="settings_username_label">Gebruikersnaam</string>
+    <string name="settings_section_playback">Afspelen</string>
+    <string name="settings_gapless_playback">Naadloos afspelen</string>
+    <string name="settings_gapless_playback_desc">Vloeiende overgang tussen nummers</string>
+    <string name="settings_scrobble">Afspeelgeschiedenis scrobblen</string>
+    <string name="settings_scrobble_desc">Gespeelde nummers aan de server doorgeven</string>
+    <string name="settings_section_account">Account</string>
+    <string name="settings_logout_desc">Verbinding met server verbreken</string>
+    <string name="settings_app_version">ResonAuto v%1$s</string>
+    <string name="settings_app_tagline">Open-source Navidrome-client</string>
+    <string name="settings_modified_notice">In 2026 aangepast op basis van Resonance van AlanHuang99 (GPLv3): voegt Android Auto-ondersteuning, vertalingen en snelstartacties toe.</string>
+    <string name="settings_section_language">Taal</string>
+    <string name="settings_language_system">Systeem</string>
+    <string name="theme_selected">Geselecteerd</string>
+
+    <!-- Login screen -->
+    <string name="login_tagline">Verbind met je Navidrome-server</string>
+    <string name="login_server_url">Server-URL</string>
+    <string name="login_server_url_placeholder">https://music.example.com</string>
+    <string name="login_username">Gebruikersnaam</string>
+    <string name="login_password">Wachtwoord</string>
+    <string name="login_show_password">Wachtwoord tonen</string>
+    <string name="login_hide_password">Wachtwoord verbergen</string>
+    <string name="login_connect">Verbinden</string>
+
+    <!-- Library screen -->
+    <string name="library_title">Bibliotheek</string>
+    <string name="library_no_artists_found">Geen artiesten gevonden</string>
+    <string name="library_no_albums_found">Geen albums gevonden</string>
+    <string name="library_no_genres_found">Geen genres gevonden</string>
+    <string name="library_no_playlists_found">Geen afspeellijsten gevonden</string>
+    <string name="library_no_favorites_yet">Nog geen favorieten</string>
+    <string name="library_no_radios_found">Geen radiozenders gevonden</string>
+    <string name="sort_az">A–Z</string>
+    <string name="sort_newest">Recent toegevoegd</string>
+    <string name="sort_recent">Recent afgespeeld</string>
+    <string name="sort_frequent">Meest afgespeeld</string>
+    <string name="sort_random">Willekeurig</string>
+
+    <!-- Home screen -->
+    <string name="home_greeting_morning">Goedemorgen</string>
+    <string name="home_greeting_afternoon">Goedemiddag</string>
+    <string name="home_greeting_evening">Goedenavond</string>
+    <string name="home_shuffle_all">Alles willekeurig afspelen</string>
+    <string name="home_shelf_recent">Recent afgespeeld</string>
+    <string name="home_shelf_newest">Nieuwste toevoegingen</string>
+    <string name="home_shelf_frequent">Meest afgespeeld</string>
+    <string name="home_shelf_random">Willekeurige keuzes</string>
+    <string name="home_jump_back_in">GA VERDER</string>
+    <string name="home_load_failed">Laden mislukt</string>
+
+    <!-- Artist screen -->
+    <string name="artist_remove_from_favorites">Verwijderen uit favorieten</string>
+    <string name="artist_add_to_favorites">Toevoegen aan favorieten</string>
+    <string name="artist_similar_artists">Vergelijkbare artiesten</string>
+    <string name="content_desc_artist_image">Afbeelding van artiest</string>
+
+    <!-- Album screen -->
+    <string name="album_options">Albumopties</string>
+    <string name="album_disc_number">Schijf %1$d</string>
+
+    <!-- Playlist screen -->
+    <string name="content_desc_playlist_art">Afbeelding van afspeellijst</string>
+    <string name="playlist_options">Opties voor afspeellijst</string>
+
+    <!-- Genre screen -->
+    <string name="genre_no_albums">Geen albums in dit genre</string>
+
+    <!-- Player screen -->
+    <string name="player_now_playing">Nu aan het afspelen</string>
+    <string name="player_favorite">Favoriet</string>
+    <string name="player_lyrics">Songtekst</string>
+    <string name="player_queue">Wachtrij</string>
+
+    <!-- Queue screen -->
+    <string name="queue_title">Wachtrij</string>
+    <string name="queue_clear">Wachtrij wissen</string>
+    <string name="queue_empty_title">De wachtrij is leeg</string>
+    <string name="queue_empty_subtitle">Speel muziek af om de wachtrij te vullen</string>
+    <string name="content_desc_reorder">Herordenen</string>
+
+    <!-- Lyrics screen -->
+    <string name="lyrics_title">Songtekst</string>
+    <string name="lyrics_none_available">Geen songtekst beschikbaar</string>
+
+    <!-- Search screen -->
+    <string name="search_placeholder">Zoek artiesten, albums, nummers…</string>
+    <string name="search_clear">Wissen</string>
+    <string name="search_empty_message">Doorzoek je muziekbibliotheek</string>
+
+    <plurals name="album_count">
+        <item quantity="one">%1$d album</item>
+        <item quantity="other">%1$d albums</item>
+    </plurals>
+
+    <plurals name="song_count">
+        <item quantity="one">%1$d nummer</item>
+        <item quantity="other">%1$d nummers</item>
+    </plurals>
+</resources>

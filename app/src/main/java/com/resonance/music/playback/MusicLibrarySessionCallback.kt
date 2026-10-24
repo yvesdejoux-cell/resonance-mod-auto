@@ -16,6 +16,7 @@ import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.resonance.music.R
+import com.resonance.music.data.api.AudioFormats
 import com.resonance.music.data.api.models.AlbumItem
 import com.resonance.music.data.api.models.ArtistItem
 import com.resonance.music.data.api.models.InternetRadioStation
@@ -167,7 +168,7 @@ class MusicLibrarySessionCallback(
         browser: MediaSession.ControllerInfo,
         params: LibraryParams?
     ): ListenableFuture<LibraryResult<MediaItem>> =
-        Futures.immediateFuture(LibraryResult.ofItem(folderItem(ROOT_ID, "Resonance"), params))
+        Futures.immediateFuture(LibraryResult.ofItem(folderItem(ROOT_ID, "ResonAuto"), params))
 
     override fun onGetChildren(
         session: MediaLibrarySession,
@@ -231,7 +232,7 @@ class MusicLibrarySessionCallback(
     ): ListenableFuture<LibraryResult<MediaItem>> = scope.future {
         val item: MediaItem? = try {
             when {
-                mediaId == ROOT_ID -> folderItem(ROOT_ID, "Resonance")
+                mediaId == ROOT_ID -> folderItem(ROOT_ID, "ResonAuto")
                 mediaId == ARTISTS_ID -> folderItem(ARTISTS_ID, "Artistes")
                 mediaId == ALBUMS_ID -> folderItem(ALBUMS_ID, "Albums")
                 mediaId == PLAYLISTS_ID -> folderItem(PLAYLISTS_ID, "Playlists")
@@ -460,7 +461,7 @@ class MusicLibrarySessionCallback(
     }
 
     private fun songPlayableItem(song: SongItem): MediaItem? {
-        val uri = musicRepository.getStreamUrl(song.id) ?: return null
+        val uri = musicRepository.getStreamUrl(song.id, AudioFormats.needsTranscoding(song.suffix)) ?: return null
         val extras = Bundle().apply {
             song.coverArt?.let { putString(PlaybackManager.EXTRA_COVER_ART, it) }
             putBoolean(PlaybackManager.EXTRA_STARRED, song.starred != null)

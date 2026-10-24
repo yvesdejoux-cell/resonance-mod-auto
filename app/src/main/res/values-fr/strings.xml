@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Resonance Mod Auto</string>
+    <string name="app_name">ResonAuto</string>
 
     <!-- Common -->
     <string name="content_desc_back">Retour</string>
@@ -67,9 +67,9 @@
     <string name="settings_scrobble_desc">Signaler les titres écoutés au serveur</string>
     <string name="settings_section_account">Compte</string>
     <string name="settings_logout_desc">Se déconnecter du serveur</string>
-    <string name="settings_app_version">Resonance v%1$s</string>
+    <string name="settings_app_version">ResonAuto v%1$s</string>
     <string name="settings_app_tagline">Client Navidrome open source</string>
-    <string name="settings_modified_notice">Modifié en 2026 à partir de Resonance par AlanHuang99 (GPLv3) — ajoute le support Android Auto, la traduction française et des raccourcis de lecture.</string>
+    <string name="settings_modified_notice">Modifié en 2026 à partir de Resonance par AlanHuang99 (GPLv3) — ajoute le support Android Auto, les traductions et des raccourcis de lecture.</string>
     <string name="settings_section_language">Langue</string>
     <string name="settings_language_system">Système</string>
     <string name="theme_selected">Sélectionné</string>

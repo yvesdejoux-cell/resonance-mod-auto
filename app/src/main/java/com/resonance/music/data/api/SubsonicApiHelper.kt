@@ -20,8 +20,18 @@ class SubsonicApiHelper(
     private var cachedBaseUrl: String? = null
     private var cachedAuthParams: String? = null
 
-    fun getStreamUrl(songId: String): String? =
-        buildUrl("rest/stream", mapOf("id" to songId))
+    /** [transcode] asks Navidrome for an MP3 conversion; estimateContentLength lets the
+     *  player seek in that stream, which has no real length until it is fully produced. */
+    fun getStreamUrl(songId: String, transcode: Boolean = false): String? =
+        buildUrl(
+            "rest/stream",
+            if (transcode) mapOf(
+                "id" to songId,
+                "format" to AudioFormats.TRANSCODE_FORMAT,
+                "maxBitRate" to AudioFormats.TRANSCODE_MAX_BITRATE.toString(),
+                "estimateContentLength" to "true"
+            ) else mapOf("id" to songId)
+        )
 
     fun getCoverArtUrl(coverArtId: String, size: Int = 300): String? =
         buildUrl("rest/getCoverArt", mapOf("id" to coverArtId, "size" to size.toString()))

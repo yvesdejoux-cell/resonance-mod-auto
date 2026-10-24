@@ -16,7 +16,7 @@ Le fichier `.aab` signé a été envoyé séparément dans la conversation.
 
 ## Fiche du Store — Store listing
 
-1. **Nom de l'app** : `Resonance Mod Auto`
+1. **Nom de l'app** : `ResonAuto`
 2. **Description courte / longue** : copier-coller depuis les fichiers `.txt` ci-dessus
 3. **Icône** : `icon-512.png`
 4. **Image de fonctionnalité** : `feature-graphic-1024x500.png`

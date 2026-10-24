@@ -16,8 +16,8 @@ android {
         applicationId = "fr.ydjixi.resonancemodauto"
         minSdk = 31
         targetSdk = 36
-        versionCode = 18
-        versionName = "0.8.1"
+        versionCode = 19
+        versionName = "0.9.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

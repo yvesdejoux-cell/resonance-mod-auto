@@ -1,4 +1,4 @@
-Resonance Mod Auto est un client Android open source pour les serveurs de musique compatibles Navidrome et Subsonic — écoutez votre propre bibliothèque musicale, sur votre téléphone comme dans votre voiture.
+ResonAuto est un client Android open source pour les serveurs de musique compatibles Navidrome et Subsonic — écoutez votre propre bibliothèque musicale, sur votre téléphone comme dans votre voiture.
 
 Ce fork ajoute par rapport au projet original :
 🚗 Support complet d'Android Auto — parcourez Artistes, Albums, Playlists et Favoris directement sur l'écran de votre voiture, avec des raccourcis "Tout écouter" et "Lecture aléatoire"

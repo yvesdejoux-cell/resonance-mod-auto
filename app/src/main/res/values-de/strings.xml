@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ResonAuto</string>
+
+    <!-- Common -->
+    <string name="content_desc_back">Zurück</string>
+    <string name="action_play">Abspielen</string>
+    <string name="action_pause">Pause</string>
+    <string name="action_shuffle">Zufällig</string>
+    <string name="action_next">Nächster Titel</string>
+    <string name="action_previous">Vorheriger Titel</string>
+    <string name="action_repeat">Wiederholen</string>
+    <string name="action_loop">Schleife</string>
+    <string name="action_play_next">Als Nächstes abspielen</string>
+    <string name="action_add_to_queue">Zur Warteschlange hinzufügen</string>
+    <string name="action_go_to_album">Zum Album</string>
+    <string name="action_go_to_artist">Zum Künstler</string>
+    <string name="content_desc_more_options">Weitere Optionen</string>
+    <string name="action_retry">Erneut versuchen</string>
+    <string name="action_see_all">Alle anzeigen</string>
+    <string name="action_cancel">Abbrechen</string>
+    <string name="action_ok">OK</string>
+    <string name="action_save">Speichern</string>
+    <string name="action_create">Erstellen</string>
+    <string name="content_desc_album_art">Albumcover</string>
+    <string name="error_generic">Fehler</string>
+    <string name="error_unknown">Unbekannter Fehler</string>
+
+    <!-- Playlists -->
+    <string name="action_add_to_playlist">Zur Playlist hinzufügen</string>
+    <string name="action_remove_from_playlist">Aus Playlist entfernen</string>
+    <string name="action_new_playlist">Neue Playlist</string>
+    <string name="action_rename_playlist">Playlist umbenennen</string>
+    <string name="action_delete_playlist">Playlist löschen</string>
+    <string name="playlist_name_label">Name der Playlist</string>
+    <string name="playlist_delete_confirm_message">\"%1$s\" löschen? Das kann nicht rückgängig gemacht werden.</string>
+
+    <!-- Shared section / tab labels -->
+    <string name="label_artists">Künstler</string>
+    <string name="label_albums">Alben</string>
+    <string name="label_genres">Genres</string>
+    <string name="label_playlists">Playlists</string>
+    <string name="label_favorites">Favoriten</string>
+    <string name="label_radios">Radios</string>
+    <string name="label_songs">Songs</string>
+    <string name="label_tracks">Titel</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Start</string>
+    <string name="nav_search">Suche</string>
+    <string name="nav_library">Bibliothek</string>
+    <string name="nav_settings">Einstellungen</string>
+
+    <!-- Settings screen -->
+    <string name="settings_title">Einstellungen</string>
+    <string name="settings_logout">Abmelden</string>
+    <string name="settings_logout_confirm_message">Dadurch wird die Verbindung zum Server getrennt und deine Zugangsdaten werden gelöscht.</string>
+    <string name="settings_section_theme">Design</string>
+    <string name="settings_section_server">Server</string>
+    <string name="settings_server_label">Server</string>
+    <string name="settings_not_connected">Nicht verbunden</string>
+    <string name="settings_username_label">Benutzername</string>
+    <string name="settings_section_playback">Wiedergabe</string>
+    <string name="settings_gapless_playback">Lückenlose Wiedergabe</string>
+    <string name="settings_gapless_playback_desc">Nahtloser Übergang zwischen Titeln</string>
+    <string name="settings_scrobble">Wiedergaben scrobbeln</string>
+    <string name="settings_scrobble_desc">Gespielte Titel an den Server melden</string>
+    <string name="settings_section_account">Konto</string>
+    <string name="settings_logout_desc">Vom Server trennen</string>
+    <string name="settings_app_version">ResonAuto v%1$s</string>
+    <string name="settings_app_tagline">Open-Source-Navidrome-Client</string>
+    <string name="settings_modified_notice">2026 geändert auf Basis von Resonance von AlanHuang99 (GPLv3) – ergänzt Android-Auto-Unterstützung, Übersetzungen und Schnellstart-Aktionen.</string>
+    <string name="settings_section_language">Sprache</string>
+    <string name="settings_language_system">System</string>
+    <string name="theme_selected">Ausgewählt</string>
+
+    <!-- Login screen -->
+    <string name="login_tagline">Mit deinem Navidrome-Server verbinden</string>
+    <string name="login_server_url">Server-URL</string>
+    <string name="login_server_url_placeholder">https://music.example.com</string>
+    <string name="login_username">Benutzername</string>
+    <string name="login_password">Passwort</string>
+    <string name="login_show_password">Passwort anzeigen</string>
+    <string name="login_hide_password">Passwort verbergen</string>
+    <string name="login_connect">Verbinden</string>
+
+    <!-- Library screen -->
+    <string name="library_title">Bibliothek</string>
+    <string name="library_no_artists_found">Keine Künstler gefunden</string>
+    <string name="library_no_albums_found">Keine Alben gefunden</string>
+    <string name="library_no_genres_found">Keine Genres gefunden</string>
+    <string name="library_no_playlists_found">Keine Playlists gefunden</string>
+    <string name="library_no_favorites_yet">Noch keine Favoriten</string>
+    <string name="library_no_radios_found">Keine Radiosender gefunden</string>
+    <string name="sort_az">A–Z</string>
+    <string name="sort_newest">Zuletzt hinzugefügt</string>
+    <string name="sort_recent">Zuletzt gespielt</string>
+    <string name="sort_frequent">Am häufigsten gespielt</string>
+    <string name="sort_random">Zufällig</string>
+
+    <!-- Home screen -->
+    <string name="home_greeting_morning">Guten Morgen</string>
+    <string name="home_greeting_afternoon">Guten Tag</string>
+    <string name="home_greeting_evening">Guten Abend</string>
+    <string name="home_shuffle_all">Alles zufällig abspielen</string>
+    <string name="home_shelf_recent">Zuletzt gespielt</string>
+    <string name="home_shelf_newest">Neueste Ergänzungen</string>
+    <string name="home_shelf_frequent">Am häufigsten gespielt</string>
+    <string name="home_shelf_random">Zufallsauswahl</string>
+    <string name="home_jump_back_in">WEITERHÖREN</string>
+    <string name="home_load_failed">Laden fehlgeschlagen</string>
+
+    <!-- Artist screen -->
+    <string name="artist_remove_from_favorites">Aus Favoriten entfernen</string>
+    <string name="artist_add_to_favorites">Zu Favoriten hinzufügen</string>
+    <string name="artist_similar_artists">Ähnliche Künstler</string>
+    <string name="content_desc_artist_image">Künstlerbild</string>
+
+    <!-- Album screen -->
+    <string name="album_options">Albumoptionen</string>
+    <string name="album_disc_number">CD %1$d</string>
+
+    <!-- Playlist screen -->
+    <string name="content_desc_playlist_art">Playlist-Cover</string>
+    <string name="playlist_options">Playlist-Optionen</string>
+
+    <!-- Genre screen -->
+    <string name="genre_no_albums">Keine Alben in diesem Genre</string>
+
+    <!-- Player screen -->
+    <string name="player_now_playing">Aktuelle Wiedergabe</string>
+    <string name="player_favorite">Favorit</string>
+    <string name="player_lyrics">Songtext</string>
+    <string name="player_queue">Warteschlange</string>
+
+    <!-- Queue screen -->
+    <string name="queue_title">Warteschlange</string>
+    <string name="queue_clear">Warteschlange leeren</string>
+    <string name="queue_empty_title">Die Warteschlange ist leer</string>
+    <string name="queue_empty_subtitle">Spiele Musik ab, um die Warteschlange zu füllen</string>
+    <string name="content_desc_reorder">Neu anordnen</string>
+
+    <!-- Lyrics screen -->
+    <string name="lyrics_title">Songtext</string>
+    <string name="lyrics_none_available">Kein Songtext verfügbar</string>
+
+    <!-- Search screen -->
+    <string name="search_placeholder">Künstler, Alben, Titel suchen…</string>
+    <string name="search_clear">Leeren</string>
+    <string name="search_empty_message">Durchsuche deine Musikbibliothek</string>
+
+    <plurals name="album_count">
+        <item quantity="one">%1$d Album</item>
+        <item quantity="other">%1$d Alben</item>
+    </plurals>
+
+    <plurals name="song_count">
+        <item quantity="one">%1$d Titel</item>
+        <item quantity="other">%1$d Titel</item>
+    </plurals>
+</resources>

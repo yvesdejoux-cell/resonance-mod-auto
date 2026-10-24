@@ -11,6 +11,7 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
+import com.resonance.music.data.api.AudioFormats
 import com.resonance.music.data.api.SubsonicApiHelper
 import com.resonance.music.data.api.models.InternetRadioStation
 import com.resonance.music.data.api.models.SongItem
@@ -398,7 +399,7 @@ class PlaybackManager @Inject constructor(
     }
 
     private fun buildMediaItem(song: SongItem): MediaItem? {
-        val uri = apiHelper.getStreamUrl(song.id) ?: return null
+        val uri = apiHelper.getStreamUrl(song.id, AudioFormats.needsTranscoding(song.suffix)) ?: return null
         val artworkUri = song.coverArt?.let { apiHelper.getCoverArtUrl(it, 600) }
         val extras = Bundle().apply {
             song.coverArt?.let { putString(EXTRA_COVER_ART, it) }

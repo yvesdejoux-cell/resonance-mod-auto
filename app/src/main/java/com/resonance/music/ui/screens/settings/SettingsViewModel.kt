@@ -20,7 +20,12 @@ import javax.inject.Inject
 enum class AppLanguage(val tag: String?, val displayName: String) {
     SYSTEM(null, "System"),
     ENGLISH("en", "English"),
-    FRENCH("fr", "Français");
+    FRENCH("fr", "Français"),
+    GERMAN("de", "Deutsch"),
+    SPANISH("es", "Español"),
+    ITALIAN("it", "Italiano"),
+    PORTUGUESE("pt", "Português"),
+    DUTCH("nl", "Nederlands");
 
     companion object {
         fun fromTag(tag: String?): AppLanguage = entries.firstOrNull { it.tag == tag } ?: SYSTEM

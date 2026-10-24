@@ -1,10 +1,10 @@
 package com.resonance.music
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
@@ -16,8 +16,10 @@ import com.resonance.music.ui.theme.ThemeRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+// AppCompatActivity (not ComponentActivity): AppCompatDelegate.setApplicationLocales, used by
+// the language picker, silently does nothing unless an AppCompat activity is running.
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var themeRepository: ThemeRepository

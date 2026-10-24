@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ResonAuto</string>
+
+    <!-- Common -->
+    <string name="content_desc_back">Indietro</string>
+    <string name="action_play">Riproduci</string>
+    <string name="action_pause">Pausa</string>
+    <string name="action_shuffle">Casuale</string>
+    <string name="action_next">Successivo</string>
+    <string name="action_previous">Precedente</string>
+    <string name="action_repeat">Ripeti</string>
+    <string name="action_loop">Ciclo</string>
+    <string name="action_play_next">Riproduci dopo</string>
+    <string name="action_add_to_queue">Aggiungi alla coda</string>
+    <string name="action_go_to_album">Vai all\'album</string>
+    <string name="action_go_to_artist">Vai all\'artista</string>
+    <string name="content_desc_more_options">Altre opzioni</string>
+    <string name="action_retry">Riprova</string>
+    <string name="action_see_all">Mostra tutto</string>
+    <string name="action_cancel">Annulla</string>
+    <string name="action_ok">OK</string>
+    <string name="action_save">Salva</string>
+    <string name="action_create">Crea</string>
+    <string name="content_desc_album_art">Copertina dell\'album</string>
+    <string name="error_generic">Errore</string>
+    <string name="error_unknown">Errore sconosciuto</string>
+
+    <!-- Playlists -->
+    <string name="action_add_to_playlist">Aggiungi alla playlist</string>
+    <string name="action_remove_from_playlist">Rimuovi dalla playlist</string>
+    <string name="action_new_playlist">Nuova playlist</string>
+    <string name="action_rename_playlist">Rinomina playlist</string>
+    <string name="action_delete_playlist">Elimina playlist</string>
+    <string name="playlist_name_label">Nome della playlist</string>
+    <string name="playlist_delete_confirm_message">Eliminare \"%1$s\"? L\'operazione non può essere annullata.</string>
+
+    <!-- Shared section / tab labels -->
+    <string name="label_artists">Artisti</string>
+    <string name="label_albums">Album</string>
+    <string name="label_genres">Generi</string>
+    <string name="label_playlists">Playlist</string>
+    <string name="label_favorites">Preferiti</string>
+    <string name="label_radios">Radio</string>
+    <string name="label_songs">Brani</string>
+    <string name="label_tracks">Tracce</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_search">Cerca</string>
+    <string name="nav_library">Libreria</string>
+    <string name="nav_settings">Impostazioni</string>
+
+    <!-- Settings screen -->
+    <string name="settings_title">Impostazioni</string>
+    <string name="settings_logout">Esci</string>
+    <string name="settings_logout_confirm_message">Verrà interrotta la connessione al server e le tue credenziali saranno cancellate.</string>
+    <string name="settings_section_theme">Tema</string>
+    <string name="settings_section_server">Server</string>
+    <string name="settings_server_label">Server</string>
+    <string name="settings_not_connected">Non connesso</string>
+    <string name="settings_username_label">Nome utente</string>
+    <string name="settings_section_playback">Riproduzione</string>
+    <string name="settings_gapless_playback">Riproduzione senza interruzioni</string>
+    <string name="settings_gapless_playback_desc">Transizione fluida tra i brani</string>
+    <string name="settings_scrobble">Scrobbling delle riproduzioni</string>
+    <string name="settings_scrobble_desc">Segnala al server i brani riprodotti</string>
+    <string name="settings_section_account">Account</string>
+    <string name="settings_logout_desc">Disconnetti dal server</string>
+    <string name="settings_app_version">ResonAuto v%1$s</string>
+    <string name="settings_app_tagline">Client Navidrome open source</string>
+    <string name="settings_modified_notice">Modificato nel 2026 a partire da Resonance di AlanHuang99 (GPLv3): aggiunge il supporto ad Android Auto, traduzioni e azioni di riproduzione rapida.</string>
+    <string name="settings_section_language">Lingua</string>
+    <string name="settings_language_system">Sistema</string>
+    <string name="theme_selected">Selezionato</string>
+
+    <!-- Login screen -->
+    <string name="login_tagline">Connettiti al tuo server Navidrome</string>
+    <string name="login_server_url">URL del server</string>
+    <string name="login_server_url_placeholder">https://music.example.com</string>
+    <string name="login_username">Nome utente</string>
+    <string name="login_password">Password</string>
+    <string name="login_show_password">Mostra password</string>
+    <string name="login_hide_password">Nascondi password</string>
+    <string name="login_connect">Connetti</string>
+
+    <!-- Library screen -->
+    <string name="library_title">Libreria</string>
+    <string name="library_no_artists_found">Nessun artista trovato</string>
+    <string name="library_no_albums_found">Nessun album trovato</string>
+    <string name="library_no_genres_found">Nessun genere trovato</string>
+    <string name="library_no_playlists_found">Nessuna playlist trovata</string>
+    <string name="library_no_favorites_yet">Ancora nessun preferito</string>
+    <string name="library_no_radios_found">Nessuna stazione radio trovata</string>
+    <string name="sort_az">A–Z</string>
+    <string name="sort_newest">Aggiunti di recente</string>
+    <string name="sort_recent">Riprodotti di recente</string>
+    <string name="sort_frequent">Più riprodotti</string>
+    <string name="sort_random">Casuale</string>
+
+    <!-- Home screen -->
+    <string name="home_greeting_morning">Buongiorno</string>
+    <string name="home_greeting_afternoon">Buon pomeriggio</string>
+    <string name="home_greeting_evening">Buonasera</string>
+    <string name="home_shuffle_all">Riproduci tutto in modo casuale</string>
+    <string name="home_shelf_recent">Riprodotti di recente</string>
+    <string name="home_shelf_newest">Ultime aggiunte</string>
+    <string name="home_shelf_frequent">Più riprodotti</string>
+    <string name="home_shelf_random">Selezione casuale</string>
+    <string name="home_jump_back_in">RIPRENDI DA DOVE ERI</string>
+    <string name="home_load_failed">Caricamento non riuscito</string>
+
+    <!-- Artist screen -->
+    <string name="artist_remove_from_favorites">Rimuovi dai preferiti</string>
+    <string name="artist_add_to_favorites">Aggiungi ai preferiti</string>
+    <string name="artist_similar_artists">Artisti simili</string>
+    <string name="content_desc_artist_image">Immagine dell\'artista</string>
+
+    <!-- Album screen -->
+    <string name="album_options">Opzioni album</string>
+    <string name="album_disc_number">Disco %1$d</string>
+
+    <!-- Playlist screen -->
+    <string name="content_desc_playlist_art">Copertina della playlist</string>
+    <string name="playlist_options">Opzioni playlist</string>
+
+    <!-- Genre screen -->
+    <string name="genre_no_albums">Nessun album in questo genere</string>
+
+    <!-- Player screen -->
+    <string name="player_now_playing">In riproduzione</string>
+    <string name="player_favorite">Preferito</string>
+    <string name="player_lyrics">Testo</string>
+    <string name="player_queue">Coda</string>
+
+    <!-- Queue screen -->
+    <string name="queue_title">Coda</string>
+    <string name="queue_clear">Svuota coda</string>
+    <string name="queue_empty_title">La coda è vuota</string>
+    <string name="queue_empty_subtitle">Riproduci della musica per riempire la coda</string>
+    <string name="content_desc_reorder">Riordina</string>
+
+    <!-- Lyrics screen -->
+    <string name="lyrics_title">Testo</string>
+    <string name="lyrics_none_available">Nessun testo disponibile</string>
+
+    <!-- Search screen -->
+    <string name="search_placeholder">Cerca artisti, album, brani…</string>
+    <string name="search_clear">Cancella</string>
+    <string name="search_empty_message">Cerca nella tua libreria musicale</string>
+
+    <plurals name="album_count">
+        <item quantity="one">%1$d album</item>
+        <item quantity="many">%1$d album</item>
+        <item quantity="other">%1$d album</item>
+    </plurals>
+
+    <plurals name="song_count">
+        <item quantity="one">%1$d brano</item>
+        <item quantity="many">%1$d brani</item>
+        <item quantity="other">%1$d brani</item>
+    </plurals>
+</resources>

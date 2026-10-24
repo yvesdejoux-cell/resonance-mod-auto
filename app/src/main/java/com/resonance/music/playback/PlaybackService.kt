@@ -12,6 +12,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
 import com.resonance.music.MainActivity
+import com.resonance.music.data.api.AudioFormats
 import com.resonance.music.data.repository.MusicRepository
 import com.resonance.music.data.repository.SettingsStore
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,6 +44,16 @@ class PlaybackService : MediaLibraryService() {
     private var mediaLibrarySession: MediaLibrarySession? = null
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
+    private companion object {
+        val FORMAT_ERROR_CODES = setOf(
+            PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED,
+            PlaybackException.ERROR_CODE_DECODING_FORMAT_UNSUPPORTED,
+            PlaybackException.ERROR_CODE_DECODING_FORMAT_EXCEEDS_CAPABILITIES,
+            PlaybackException.ERROR_CODE_DECODER_INIT_FAILED,
+            PlaybackException.ERROR_CODE_DECODER_QUERY_FAILED
+        )
+    }
+
     override fun onCreate() {
         super.onCreate()
 
@@ -65,6 +76,7 @@ class PlaybackService : MediaLibraryService() {
         player.addListener(object : Player.Listener {
             override fun onPlayerError(error: PlaybackException) {
                 Log.e("PlaybackService", "Playback error: ${error.message}", error)
+                if (retryWithTranscoding(player, error)) return
                 consecutiveFailures++
                 if (consecutiveFailures > 3) {
                     player.pause()
@@ -99,6 +111,21 @@ class PlaybackService : MediaLibraryService() {
         mediaLibrarySession = MediaLibrarySession.Builder(this, player, sessionCallback)
             .setSessionActivity(buildContentIntent())
             .build()
+    }
+
+    // A file the device can't decode (ALAC inside an .m4a, a container not on the known list...)
+    // is requested again from Navidrome as MP3 instead of being skipped. Only once per track:
+    // the retried URL carries the format marker, so a second failure takes the normal path.
+    private fun retryWithTranscoding(player: Player, error: PlaybackException): Boolean {
+        if (error.errorCode !in FORMAT_ERROR_CODES) return false
+        val item = player.currentMediaItem ?: return false
+        val current = item.localConfiguration?.uri?.toString() ?: return false
+        if (item.mediaId.startsWith("radio") || AudioFormats.isTranscodedUrl(current)) return false
+        val url = musicRepository.getStreamUrl(item.mediaId, transcode = true) ?: return false
+        player.replaceMediaItem(player.currentMediaItemIndex, item.buildUpon().setUri(url).build())
+        player.prepare()
+        player.play()
+        return true
     }
 
     // Radio streams have no meaningful "resume position" and aren't real library songs,

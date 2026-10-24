@@ -217,7 +217,8 @@ class MusicRepository @Inject constructor(
 
     // --- URLs ---
 
-    fun getStreamUrl(songId: String): String? = apiHelper.getStreamUrl(songId)
+    fun getStreamUrl(songId: String, transcode: Boolean = false): String? =
+        apiHelper.getStreamUrl(songId, transcode)
     fun getCoverArtUrl(coverArtId: String, size: Int = 300): String? = apiHelper.getCoverArtUrl(coverArtId, size)
 }
 

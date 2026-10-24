@@ -1,7 +1,7 @@
 package com.resonance.music.ui.screens.login
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,9 +19,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -60,15 +59,19 @@ fun LoginScreen(
         ) {
             Spacer(modifier = Modifier.height(72.dp))
 
-            RippleLogo()
+            Image(
+                painter = painterResource(R.drawable.logo_dial),
+                contentDescription = null,
+                modifier = Modifier.size(112.dp)
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "RESONANCE MOD",
-                style = MaterialTheme.typography.headlineSmall.copy(
+                text = stringResource(R.string.app_name),
+                style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.Medium,
-                    letterSpacing = 4.sp
+                    letterSpacing = 1.sp
                 ),
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 1
@@ -188,20 +191,5 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(40.dp))
         }
-    }
-}
-
-/** The app's ripple mark, drawn with the active theme's colors. */
-@Composable
-private fun RippleLogo() {
-    val primary = MaterialTheme.colorScheme.primary
-    val secondary = MaterialTheme.colorScheme.secondary
-    Canvas(modifier = Modifier.size(104.dp)) {
-        val center = Offset(size.width / 2f, size.height / 2f)
-        val unit = size.minDimension / 2f
-        drawCircle(secondary.copy(alpha = 0.55f), radius = unit * 0.92f, center = center, style = Stroke(width = unit * 0.055f))
-        drawCircle(primary.copy(alpha = 0.85f), radius = unit * 0.62f, center = center, style = Stroke(width = unit * 0.07f))
-        drawCircle(primary, radius = unit * 0.34f, center = center, style = Stroke(width = unit * 0.08f))
-        drawCircle(primary, radius = unit * 0.12f, center = center)
     }
 }
