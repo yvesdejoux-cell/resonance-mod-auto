@@ -1,0 +1,30 @@
+ResonAuto es un cliente Android de código abierto para servidores de música compatibles con Navidrome y Subsonic: escucha tu propia biblioteca musical, en el móvil y en el coche.
+
+Lo que añade este fork al proyecto original:
+🚗 Compatibilidad completa con Android Auto: explora Artistas, Álbumes, Listas, Radios y Favoritos directamente en la pantalla del coche, con accesos rápidos "Reproducir todo" y "Aleatorio", un botón de corazón para añadir a favoritos y reanudación de la reproducción donde la dejaste
+🎶 Gestión de listas de reproducción: crea, renombra y elimina listas, añade o quita canciones desde cualquier pantalla, incluido el reproductor
+📻 Emisoras de radio por internet de tu servidor Navidrome
+🌍 7 idiomas: francés, inglés, alemán, español, italiano, portugués y neerlandés, con selector de idioma en los ajustes
+🎧 Reproducción de muchos formatos de audio: los que el móvil no puede leer (WMA, APE, WavPack, DSD, AIFF…) los convierte tu servidor Navidrome
+▶ Botones de reproducción rápida en álbumes, artistas y listas en toda la aplicación
+
+Funciones heredadas del proyecto original:
+• Streaming desde cualquier servidor Subsonic o Navidrome
+• Navegación por artista, álbum y género, búsqueda en toda la biblioteca
+• Controles de reproducción completos: reproducir, pausa, avanzar, retroceder, aleatorio, repetición
+• Cola editable (reproducir a continuación, añadir, reordenar, eliminar)
+• Reproducción en segundo plano con notificación y controles multimedia
+• Minirreproductor y reproductor a pantalla completa con gestos
+• Favoritos: artistas, álbumes, canciones
+• Páginas de artista con biografía y artistas similares
+• Letras sincronizadas y en texto plano con desplazamiento automático
+• Scrobbling a tu servidor
+• Varios temas de color
+• Sin anuncios ni rastreo: la única cuenta utilizada es la tuya
+
+Requisitos:
+• Un servidor compatible con Subsonic, por ejemplo Navidrome (navidrome.org)
+• Android 12 o posterior
+• Para reproducir formatos no nativos, un servidor Navidrome con ffmpeg (incluido en la imagen oficial de Docker)
+
+Este software es un fork con licencia GPLv3 del proyecto Resonance de AlanHuang99. Código fuente en GitHub: github.com/yvesdejoux-cell/resonance-mod-auto

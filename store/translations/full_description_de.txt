@@ -1,0 +1,30 @@
+ResonAuto ist ein quelloffener Android-Client für Navidrome- und Subsonic-kompatible Musikserver – hören Sie Ihre eigene Musikbibliothek, auf dem Smartphone wie im Auto.
+
+Das bietet dieser Fork zusätzlich zum Originalprojekt:
+🚗 Vollständige Android-Auto-Unterstützung – Künstler, Alben, Playlists, Radios und Favoriten direkt auf dem Autobildschirm durchsuchen, mit Schnellzugriffen für „Alles abspielen“ und „Zufallswiedergabe“, einem Herz-Button für Favoriten und Fortsetzung der Wiedergabe an der letzten Stelle
+🎶 Playlist-Verwaltung – Playlists erstellen, umbenennen und löschen, Titel von jedem Bildschirm aus hinzufügen oder entfernen, auch im Player
+📻 Internetradios Ihres Navidrome-Servers
+🌍 7 Sprachen: Französisch, Englisch, Deutsch, Spanisch, Italienisch, Portugiesisch und Niederländisch, mit Sprachauswahl in den Einstellungen
+🎧 Viele Audioformate: Formate, die das Smartphone nicht abspielen kann (WMA, APE, WavPack, DSD, AIFF …), werden von Ihrem Navidrome-Server umgewandelt
+▶ Schnellstart-Buttons für Alben, Künstler und Playlists in der ganzen App
+
+Vom Originalprojekt übernommene Funktionen:
+• Streaming von jedem Subsonic- oder Navidrome-Server
+• Navigation nach Künstler, Album und Genre, Suche in der gesamten Bibliothek
+• Vollständige Wiedergabesteuerung: Wiedergabe, Pause, Vor- und Zurückspringen, Zufall, Wiederholung
+• Bearbeitbare Warteschlange (als Nächstes abspielen, hinzufügen, neu ordnen, entfernen)
+• Wiedergabe im Hintergrund mit Benachrichtigung und Mediensteuerung
+• Mini-Player und Vollbild-Player mit Gesten
+• Favoriten: Künstler, Alben, Titel
+• Künstlerseiten mit Biografie und ähnlichen Künstlern
+• Synchronisierte und einfache Songtexte mit automatischem Scrollen
+• Scrobbling auf Ihren Server
+• Mehrere Farbdesigns
+• Keine Werbung, kein Tracking – das einzige verwendete Konto ist Ihr eigenes
+
+Voraussetzungen:
+• Ein Subsonic-kompatibler Server, z. B. Navidrome (navidrome.org)
+• Android 12 oder neuer
+• Für nicht native Formate: ein Navidrome-Server mit ffmpeg (im offiziellen Docker-Image enthalten)
+
+Diese Software ist ein GPLv3-Fork des Projekts Resonance von AlanHuang99. Quellcode auf GitHub: github.com/yvesdejoux-cell/resonance-mod-auto

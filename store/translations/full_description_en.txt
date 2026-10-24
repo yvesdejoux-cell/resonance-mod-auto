@@ -1,0 +1,30 @@
+ResonAuto is an open-source Android client for Navidrome and Subsonic-compatible music servers — listen to your own music library, on your phone and in your car.
+
+What this fork adds to the original project:
+🚗 Full Android Auto support — browse Artists, Albums, Playlists, Radios and Favorites right on your car screen, with "Play all" and "Shuffle" shortcuts, a heart button to add to favorites, and playback that resumes where you left off
+🎶 Playlist management — create, rename and delete playlists, add or remove tracks from any screen, including the player
+📻 Internet radio stations from your Navidrome server
+🌍 7 languages: French, English, German, Spanish, Italian, Portuguese and Dutch, with a language picker in settings
+🎧 Wide audio format support: formats your phone can't play (WMA, APE, WavPack, DSD, AIFF…) are converted by your Navidrome server
+▶ Quick-play buttons on albums, artists and playlists throughout the app
+
+Features inherited from the original project:
+• Stream from any Subsonic or Navidrome server
+• Browse by artist, album and genre, search your whole library
+• Full playback controls: play, pause, skip, seek, shuffle, repeat
+• Editable queue (play next, add, reorder, remove)
+• Background playback with notification and media controls
+• Mini player and full-screen player with gestures
+• Favorites: artists, albums, songs
+• Artist pages with biography and similar artists
+• Synced and plain lyrics with auto-scroll
+• Scrobbling to your server
+• Several color themes
+• No ads, no tracking — the only account used is yours
+
+Requirements:
+• A Subsonic-compatible server, for example Navidrome (navidrome.org)
+• Android 12 or later
+• To play non-native formats, a Navidrome server with ffmpeg (included in the official Docker image)
+
+This software is a GPLv3 fork of the Resonance project by AlanHuang99. Source code on GitHub: github.com/yvesdejoux-cell/resonance-mod-auto
